@@ -25,8 +25,9 @@ internal class Controller2
 					mSystem.maxINAPP = msg.reader().readByte();
 					break;
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller2.cs:28 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					break;
 				}
 			case 113:
@@ -46,8 +47,9 @@ internal class Controller2
 					y = msg.reader().readShort();
 					loopCount = msg.reader().readShort();
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller2.cs:49 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				EffecMn.addEff(new Effect(id, x, y, layer, loop, loopCount));
 				break;
@@ -55,6 +57,7 @@ internal class Controller2
 			case 48:
 			{
 				sbyte b10 = msg.reader().readByte();
+				HsnrLog.Log("WAITLOGIN", "set TRUE @ Controller2:case48 redirect b10=" + b10);
 				HsnrLog.Log("CMD48", "server redirect: b10=" + b10 + " curIpSelect=" + ServerListScreen.ipSelect + " nServers=" + (ServerListScreen.nameServer == null ? -1 : ServerListScreen.nameServer.Length));
 				ServerListScreen.SetIpSelect(b10, issave: false);
 				GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
@@ -89,8 +92,9 @@ internal class Controller2
 							himg = msg.reader().readShort();
 						}
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller2.cs:93 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					if (num17 == Char.myCharz().charID)
 					{
@@ -1030,6 +1034,7 @@ internal class Controller2
 		}
 		catch (Exception ex4)
 		{
+			HsnrLog.Log("CATCH", "Controller2.cs:1032 caught: " + ex4.GetType().Name + " " + ex4.Message);
 			Res.outz("=====> Controller2 " + ex4.StackTrace);
 		}
 	}
@@ -1063,8 +1068,9 @@ internal class Controller2
 				CrackBallScr.gI().DoneCrackBallScr(array2);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller2.cs:1067 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -1199,8 +1205,9 @@ internal class Controller2
 				}
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller2.cs:1203 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -1231,8 +1238,9 @@ internal class Controller2
 				obj?.removeEffChar(-1, 0);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller2.cs:1235 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -1288,8 +1296,9 @@ internal class Controller2
 				newBoss.setDie();
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller2.cs:1292 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 }

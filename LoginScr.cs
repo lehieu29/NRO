@@ -275,15 +275,17 @@ public class LoginScr : mScreen, IActionListener
 						}
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "LoginScr.cs:278 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 			};
 			command.actionChat = actionChat;
 			Net.connectHTTP(ServerListScreen.linkGetHost, command);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "LoginScr.cs:285 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -376,8 +378,9 @@ public class LoginScr : mScreen, IActionListener
 				}
 				num = 1;
 			}
-			catch (Exception)
+			catch (Exception _ex)
 			{
+				HsnrLog.Log("CATCH", "LoginScr.cs:379 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				if (tfUser.getText().IndexOf("@") == -1 || tfUser.getText().IndexOf(".") == -1)
 				{
 					text = mResources.emailInvalid;
@@ -914,8 +917,9 @@ public class LoginScr : mScreen, IActionListener
 			{
 				GameMidlet.instance.platformRequest((string)p);
 			}
-			catch (Exception)
+			catch (Exception _ex)
 			{
+				HsnrLog.Log("CATCH", "LoginScr.cs:917 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			}
 			GameCanvas.endDlg();
 			break;
@@ -954,8 +958,9 @@ public class LoginScr : mScreen, IActionListener
 				GameMidlet.instance.platformRequest("http://ngocrongonline.com");
 				break;
 			}
-			catch (Exception)
+			catch (Exception _ex)
 			{
+				HsnrLog.Log("CATCH", "LoginScr.cs:957 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				break;
 			}
 		case 10041:

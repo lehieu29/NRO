@@ -40,6 +40,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:41 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -76,6 +77,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:77 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -99,6 +101,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:100 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -126,6 +129,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:127 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -158,6 +162,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:159 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -177,6 +182,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:178 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -204,8 +210,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:207 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -239,8 +246,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:242 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -263,8 +271,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:266 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -283,6 +292,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:284 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -304,6 +314,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:305 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -323,6 +334,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:324 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -345,8 +357,9 @@ public class Service
 			message.writer().writeChar(ch);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:348 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -370,6 +383,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:371 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -390,6 +404,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:391 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -407,8 +422,9 @@ public class Service
 			message.writer().writeInt(playerID);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:410 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -427,6 +443,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:428 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -446,6 +463,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:447 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -465,6 +483,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:466 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -492,6 +511,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:493 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -520,8 +540,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:523 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -541,6 +562,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:542 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -560,6 +582,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:561 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -579,6 +602,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:580 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -598,6 +622,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:599 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -618,6 +643,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:619 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -636,6 +662,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:637 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -664,6 +691,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:665 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -688,6 +716,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:689 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -707,6 +736,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:708 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -727,6 +757,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:728 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -751,6 +782,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:752 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -833,6 +865,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:834 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 	}
@@ -875,6 +908,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:876 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 	}
@@ -887,8 +921,9 @@ public class Service
 			message = new Message((sbyte)(-120));
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:890 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -905,8 +940,9 @@ public class Service
 			message = new Message((sbyte)(-121));
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:908 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -946,6 +982,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:947 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 	}
@@ -967,6 +1004,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:968 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 	}
@@ -987,8 +1025,9 @@ public class Service
 			session.sendMessage(message);
 			message.cleanup();
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:990 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -1001,8 +1040,9 @@ public class Service
 			session.sendMessage(message);
 			message.cleanup();
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1004 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -1015,8 +1055,9 @@ public class Service
 			session.sendMessage(message);
 			message.cleanup();
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1018 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -1054,6 +1095,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1055 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.LogError("LOI CHAR MOVE " + ex.ToString());
 		}
 	}
@@ -1068,6 +1110,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1069 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		session.sendMessage(message);
@@ -1089,6 +1132,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1090 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		session.sendMessage(message);
@@ -1105,6 +1149,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1106 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1124,6 +1169,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1125 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1144,6 +1190,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1145 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1164,6 +1211,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1165 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1184,6 +1232,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1185 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1205,6 +1254,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1206 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1229,6 +1279,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1230 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1249,6 +1300,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1250 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1268,6 +1320,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1269 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1286,6 +1339,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1287 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1307,6 +1361,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1308 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1326,6 +1381,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1327 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1348,6 +1404,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1349 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1367,6 +1424,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1368 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1387,6 +1445,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1388 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1406,6 +1465,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1407 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1424,6 +1484,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1425 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1443,6 +1504,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1444 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1471,6 +1533,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1472 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1497,6 +1560,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1498 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1516,6 +1580,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1517 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1534,6 +1599,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1535 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1552,6 +1618,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1553 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1587,6 +1654,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1588 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1665,8 +1733,9 @@ public class Service
 				session.sendMessage(message);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1668 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			Res.err(">>err ATTACT  vMob=" + vMob.size() + "  vChar=" + vChar.size());
 		}
 	}
@@ -1682,6 +1751,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1683 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1701,6 +1771,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1702 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1719,6 +1790,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1720 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1737,6 +1809,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1738 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1756,6 +1829,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1757 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1783,6 +1857,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1784 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1810,6 +1885,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1811 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1837,6 +1913,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1838 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -1864,6 +1941,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1865 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -1882,6 +1960,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1883 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1901,6 +1980,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1902 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1920,6 +2000,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1921 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1939,6 +2020,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1940 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1958,6 +2040,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1959 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1977,6 +2060,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1978 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -1996,6 +2080,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:1997 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2015,6 +2100,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2016 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2036,6 +2122,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2037 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2055,6 +2142,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2056 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2073,6 +2161,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2074 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2097,6 +2186,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2098 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2116,6 +2206,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2117 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2135,6 +2226,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2136 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2156,6 +2248,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2157 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2175,6 +2268,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2176 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2195,6 +2289,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2196 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2215,6 +2310,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2216 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2236,6 +2332,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2237 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2256,6 +2353,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2257 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2274,6 +2372,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2275 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2294,6 +2393,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2295 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2324,6 +2424,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2325 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2345,6 +2446,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2346 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2364,6 +2466,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2365 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2384,6 +2487,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2385 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2403,6 +2507,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2404 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2422,6 +2527,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2423 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2442,6 +2548,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2443 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2461,6 +2568,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2462 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2489,6 +2597,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2490 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2507,6 +2616,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2508 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2525,6 +2635,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2526 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2542,8 +2653,9 @@ public class Service
 			message.writer().writeInt(playerID);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2545 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2561,6 +2673,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2562 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2580,6 +2693,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2581 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2599,6 +2713,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2600 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2618,6 +2733,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2619 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2637,6 +2753,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2638 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2656,8 +2773,9 @@ public class Service
 			message.writer().writeByte(1);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2659 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2676,6 +2794,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2677 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2696,6 +2815,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2697 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2734,6 +2854,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2735 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -2752,8 +2873,9 @@ public class Service
 			message.writer().writeByte(selected);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2755 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2769,8 +2891,9 @@ public class Service
 			message = new Message((sbyte)(-107));
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2772 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2788,8 +2911,9 @@ public class Service
 			message.writer().writeByte(selected);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2791 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2811,8 +2935,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2814 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2857,8 +2982,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2860 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2880,8 +3006,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2883 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2899,8 +3026,9 @@ public class Service
 			message.writer().writeInt(pass);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2902 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2917,8 +3045,9 @@ public class Service
 			message.writer().writeByte(status);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2920 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2935,8 +3064,9 @@ public class Service
 			message = new Message((sbyte)(-105));
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2938 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -2956,6 +3086,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2957 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -2994,6 +3125,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:2995 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -3012,6 +3144,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3013 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -3040,8 +3173,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3043 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -3063,6 +3197,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3064 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -3081,6 +3216,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3082 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -3101,6 +3237,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3102 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -3121,6 +3258,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3122 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -3142,6 +3280,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3143 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		finally
@@ -3159,8 +3298,9 @@ public class Service
 			message.writer().writeUTF(nameImg);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3162 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -3180,8 +3320,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3183 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -3201,8 +3342,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3204 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -3228,8 +3370,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3231 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -3244,8 +3387,9 @@ public class Service
 		{
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3247 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -3270,6 +3414,7 @@ public class Service
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3271 caught: " + ex.GetType().Name + " " + ex.Message);
 			Cout.println(ex.Message + ex.StackTrace);
 		}
 		finally
@@ -3289,8 +3434,9 @@ public class Service
 			Res.err(" =====> SEND OPTION_HAT " + sub + "_" + sub_sub);
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3292 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -3313,8 +3459,9 @@ public class Service
 			}
 			session.sendMessage(message);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Service.cs:3316 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{

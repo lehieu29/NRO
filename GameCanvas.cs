@@ -3230,6 +3230,7 @@ public class GameCanvas : IActionListener
 			mSystem.onDisconnected();
 			break;
 		case 100016:
+			HsnrLog.Log("WAITLOGIN", "set TRUE @ GameCanvas:dialog 100016");
 			ServerListScreen.SetIpSelect(17, issave: false);
 			instance.doResetToLoginScr(serverScreen);
 			ServerListScreen.waitToLogin = true;

@@ -507,11 +507,13 @@ public class ServerListScreen : mScreen, IActionListener
 			tWaitToLogin++;
 			if (tWaitToLogin == 50)
 			{
+				HsnrLog.Log("WAITLOGIN", "tWaitToLogin==50 -> selectServer()");
 				GameCanvas.serverScreen.selectServer();
 				waitToLogin = false;
 			}
 			if (tWaitToLogin == 100)
 			{
+				HsnrLog.Log("WAITLOGIN", "tWaitToLogin==100 -> doLogin() AGAIN");
 				if (GameCanvas.loginScr == null)
 				{
 					GameCanvas.loginScr = new LoginScr();

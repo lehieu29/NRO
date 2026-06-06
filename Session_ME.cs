@@ -43,11 +43,13 @@ public class Session_ME : ISession
 					}
 					catch (Exception ex)
 					{
+						HsnrLog.Log("CATCH", "Session_ME.cs:44 caught: " + ex.GetType().Name + " " + ex.Message);
 						Cout.LogError(ex.ToString());
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Session_ME.cs:49 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					Res.outz("error send message! ");
 				}
 			}
@@ -79,16 +81,18 @@ public class Session_ME : ISession
 							onRecieveMsg(message);
 						}
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Session_ME.cs:82 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						Cout.println("LOI NHAN  MESS THU 1");
 					}
 					try
 					{
 						Thread.Sleep(5);
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Session_ME.cs:90 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						Cout.println("LOI NHAN  MESS THU 2");
 					}
 				}
@@ -169,8 +173,9 @@ public class Session_ME : ISession
 					GameCanvas.connect2();
 				}
 			}
-			catch (Exception)
+			catch (Exception _ex)
 			{
+				HsnrLog.Log("CATCH", "Session_ME.cs:172 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			}
 		}
 
@@ -680,8 +685,9 @@ public class Session_ME : ISession
 			}
 			Controller.isGet_CLIENT_INFO = false;
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Session_ME.cs:683 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 

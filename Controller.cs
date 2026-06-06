@@ -106,11 +106,13 @@ public class Controller : IMessageHandler
 			}
 			catch (Exception ex)
 			{
+				HsnrLog.Log("CATCH", "Controller.cs:107 caught: " + ex.GetType().Name + " " + ex.Message);
 				Cout.println("Loi tairequestItemPlayer 1" + ex.ToString());
 			}
 		}
 		catch (Exception ex2)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:112 caught: " + ex2.GetType().Name + " " + ex2.Message);
 			Cout.println("Loi tairequestItemPlayer 2" + ex2.ToString());
 		}
 	}
@@ -826,8 +828,9 @@ public class Controller : IMessageHandler
 				{
 					mob8 = (Mob)GameScr.vMob.elementAt(index3);
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:829 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				if (mob8 != null)
 				{
@@ -1015,8 +1018,9 @@ public class Controller : IMessageHandler
 					GameCanvas.panel.xS = num163 - GameScr.cmx;
 					GameCanvas.panel.yS = num164 - GameScr.cmy;
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:1018 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				for (int num165 = 0; num165 < GameScr.vNpc.size(); num165++)
 				{
@@ -1195,12 +1199,14 @@ public class Controller : IMessageHandler
 			}
 			case -74:
 			{
+				HsnrLog.Log("RES74", "cmd=-74 stopDownload=" + ServerListScreen.stopDownload + " isGetResFromServer=" + GameCanvas.isGetResourceFromServer() + " avail=" + msg.reader().available());
 				if (ServerListScreen.stopDownload)
 				{
 					return;
 				}
 				if (!GameCanvas.isGetResourceFromServer())
 				{
+					HsnrLog.Log("RES74", "isGetResourceFromServer FALSE -> getResource(3) + jump to LoginScr");
 					Service.gI().getResource(3, null);
 					SmallImage.loadBigRMS();
 					SplashScr.imgLogo = null;
@@ -1275,8 +1281,9 @@ public class Controller : IMessageHandler
 						msg.reader().read(ref data, 0, num24);
 						Rms.saveRMS(filename, data);
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:1280 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						GameCanvas.startOK(mResources.pls_restart_game_error, 8885, null);
 					}
 				}
@@ -2044,8 +2051,9 @@ public class Controller : IMessageHandler
 							isBoxClan = true;
 						}
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:2049 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					GameCanvas.panel.setTypeBox();
 					GameCanvas.panel.isBoxClan = isBoxClan;
@@ -2081,8 +2089,9 @@ public class Controller : IMessageHandler
 					{
 						typeItem = msg.reader().readByte();
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:2086 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					Res.outz(">.SKILL_NOT_FOCUS  skill typeFrame= " + b50);
 					obj = ((Char.myCharz().charID != num123) ? GameScr.findCharInMap(num123) : Char.myCharz());
@@ -2121,15 +2130,17 @@ public class Controller : IMessageHandler
 							}
 						}
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:2126 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					try
 					{
 						typeItem2 = msg.reader().readByte();
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:2133 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					Res.outz(">.SKILL_NOT_FOCUS  skill targetDame= " + point.x + ":" + point.y + "    c:" + obj.cx + ":" + obj.cy + "   cdir:" + obj.cdir);
 					obj.SetSkillPaint_STT(1, num124, point, timeDame, rangeDame, typePaint2, array10, typeItem2);
@@ -2209,8 +2220,9 @@ public class Controller : IMessageHandler
 					{
 						GameScr.findCharInMap(num123).isCharge = true;
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:2214 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 				}
 				if (b49 == 3)
@@ -2568,6 +2580,7 @@ public class Controller : IMessageHandler
 					}
 					catch (Exception ex6)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:2571 caught: " + ex6.GetType().Name + " " + ex6.Message);
 						Cout.println("Loi MAGIC_TREE " + ex6.ToString());
 					}
 					GameCanvas.menu.startAt(myVector, 3);
@@ -2636,8 +2649,9 @@ public class Controller : IMessageHandler
 					}
 					SmallImage.imgNew[num154].img = createImage(array17);
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:2641 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					array17 = null;
 					SmallImage.imgNew[num154].img = Image.createRGBImage(new int[1], 1, 1, bl: true);
 				}
@@ -2681,8 +2695,9 @@ public class Controller : IMessageHandler
 					image = Image.createImage(array11, 0, num136);
 					BgItem.imgNew.put(num135 + string.Empty, image);
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:2686 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					array11 = null;
 					BgItem.imgNew.put(num135 + string.Empty, Image.createRGBImage(new int[1], 1, 1, bl: true));
 				}
@@ -2824,8 +2839,9 @@ public class Controller : IMessageHandler
 							EffecMn.addEff(new Effect(b21, obj.cx, obj.cy, 3, 1, -1));
 						}
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:2829 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					num44 += num45;
 					if (Char.myCharz().cTypePk != 4)
@@ -2864,8 +2880,9 @@ public class Controller : IMessageHandler
 						EffecMn.addEff(new Effect(b22, obj.cx, obj.cy, 3, 1, -1));
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:2869 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				num46 += num47;
 				if (obj.cTypePk != 4)
@@ -2966,6 +2983,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex2)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:2969 caught: " + ex2.GetType().Name + " " + ex2.Message);
 					Cout.println("Loi CLEAR_CUU_SAT " + ex2.ToString());
 				}
 				obj.killCharId = -9999;
@@ -3006,6 +3024,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex26)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3009 caught: " + ex26.GetType().Name + " " + ex26.Message);
 					Cout.println("Loi MOVE_FAST " + ex26.ToString());
 				}
 				break;
@@ -3048,6 +3067,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex23)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3051 caught: " + ex23.GetType().Name + " " + ex23.Message);
 					Cout.println("Loi OPEN_UI_MENU " + ex23.ToString());
 				}
 				if (Char.myCharz().npcFocus == null)
@@ -3105,6 +3125,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex20)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3108 caught: " + ex20.GetType().Name + " " + ex20.Message);
 					Cout.println("Loi TASK_GET " + ex20.ToString());
 				}
 				Char.myCharz().taskMaint = new Task(taskId, index2, str3, str4, array12, array14, num141, array13);
@@ -3155,8 +3176,9 @@ public class Controller : IMessageHandler
 					Char.myCharz().x_hint = x_hint;
 					Char.myCharz().y_hint = y_hint;
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3160 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				break;
 			case 90:
@@ -3218,8 +3240,9 @@ public class Controller : IMessageHandler
 							Char.myCharz().luongKhoaStr = mSystem.numberTostring(Char.myCharz().luongKhoa);
 						}
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:3223 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					if (text7.Equals(string.Empty))
 					{
@@ -3422,8 +3445,9 @@ public class Controller : IMessageHandler
 				{
 					npc4.avatar = msg.reader().readShort();
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3427 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				ChatPopup.addChatPopupMultiLine(str, 100000, npc4);
 				GameCanvas.panel.hideNow();
@@ -3462,8 +3486,9 @@ public class Controller : IMessageHandler
 					short avatar = msg.reader().readShort();
 					npc2.avatar = avatar;
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3467 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				Res.outz((Char.myCharz().npcFocus == null) ? "null" : "!null");
 				GameScr.gI().createMenu(array8, npc2);
@@ -3515,8 +3540,9 @@ public class Controller : IMessageHandler
 				{
 					TileMap.loadMapFromResource(TileMap.mapID);
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3520 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					Service.gI().requestMaptemplate(TileMap.mapID);
 					messWait = msg;
 					break;
@@ -3527,8 +3553,9 @@ public class Controller : IMessageHandler
 					sbyte b29 = msg.reader().readByte();
 					TileMap.isMapDouble = ((b29 != 0) ? true : false);
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3532 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				GameScr.cmx = GameScr.cmtoX;
 				GameScr.cmy = GameScr.cmtoY;
@@ -3621,6 +3648,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex5)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3624 caught: " + ex5.GetType().Name + " " + ex5.Message);
 					Cout.println("Loi PLAYER_ATTACK_N_P " + ex5.ToString());
 				}
 				GameCanvas.debug("SA76v4", 2);
@@ -3673,8 +3701,9 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3678 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				if (num > 0)
 				{
@@ -3817,8 +3846,9 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:3822 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				break;
 			}
@@ -4025,6 +4055,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex38)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4028 caught: " + ex38.GetType().Name + " " + ex38.Message);
 					Res.outz("cmd: -5 err: " + ex38.StackTrace);
 				}
 				GameScr.gI().getFlagImage(obj16.charID, obj16.cFlag);
@@ -4041,8 +4072,9 @@ public class Controller : IMessageHandler
 					{
 						obj15 = (Char)GameScr.vCharInMap.elementAt(num176);
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:4046 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						continue;
 					}
 					if (obj15 == null || obj15.charID != num173)
@@ -4111,8 +4143,9 @@ public class Controller : IMessageHandler
 				{
 					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4116 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				if (mob9 != null)
 				{
@@ -4132,8 +4165,9 @@ public class Controller : IMessageHandler
 				{
 					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4137 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				GameCanvas.debug("SA83v1", 2);
 				if (mob9 != null)
@@ -4154,8 +4188,9 @@ public class Controller : IMessageHandler
 					{
 						flag11 = msg.reader().readBoolean();
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:4159 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					sbyte b73 = msg.reader().readByte();
 					if (b73 != -1)
@@ -4191,6 +4226,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex29)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4194 caught: " + ex29.GetType().Name + " " + ex29.Message);
 					Cout.println("Loi tai NPC_MISS  " + ex29.ToString());
 				}
 				if (mob9 != null)
@@ -4210,8 +4246,9 @@ public class Controller : IMessageHandler
 				{
 					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4215 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					Cout.println("LOi tai NPC_DIE cmd " + msg.command);
 				}
 				if (mob9 == null || mob9.status == 0 || mob9.status == 0)
@@ -4243,8 +4280,9 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4248 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				break;
 			}
@@ -4256,8 +4294,9 @@ public class Controller : IMessageHandler
 				{
 					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4261 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					Cout.println("Loi tai NPC CHANGE " + msg.command);
 				}
 				if (mob9 != null && mob9.status != 0 && mob9.status != 0)
@@ -4284,6 +4323,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception ex27)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4287 caught: " + ex27.GetType().Name + " " + ex27.Message);
 					Res.outz("Loi tai NPC_ATTACK_ME " + msg.command + " err= " + ex27.StackTrace);
 				}
 				if (mob9 != null)
@@ -4296,8 +4336,9 @@ public class Controller : IMessageHandler
 					{
 						num171 = msg.reader().readLong();
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:4301 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						num171 = 0L;
 					}
 					if (mob9.isBusyAttackSomeOne)
@@ -4319,8 +4360,9 @@ public class Controller : IMessageHandler
 				{
 					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4324 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				GameCanvas.debug("SA87x1", 2);
 				if (mob9 != null)
@@ -4340,8 +4382,9 @@ public class Controller : IMessageHandler
 					{
 						obj.cMP = msg.reader().readLong();
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:4345 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 					GameCanvas.debug("SA87x5", 2);
 					if (mob9.isBusyAttackSomeOne)
@@ -4366,8 +4409,9 @@ public class Controller : IMessageHandler
 					Char.myCharz().cPower = msg.reader().readLong();
 					Char.myCharz().applyCharLevelPercent();
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:4371 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					Cout.println("Loi tai ME_DIE " + msg.command);
 				}
 				Char.myCharz().countKill = 0;
@@ -4440,6 +4484,7 @@ public class Controller : IMessageHandler
 		}
 		catch (Exception ex41)
 		{
+			HsnrLog.Log("MSGERR", "onMessage cmd=" + msg.command + " parse FAILED: " + ex41.GetType().Name + " " + ex41.Message);
 			Res.err("[Controller] [error] " + ex41.StackTrace + " msg: " + ex41.Message + " cause " + ex41.Data);
 		}
 		finally
@@ -4584,8 +4629,9 @@ public class Controller : IMessageHandler
 		{
 			return Image.createImage(arr, 0, arr.Length);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:4590 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		return null;
 	}
@@ -4678,8 +4724,9 @@ public class Controller : IMessageHandler
 			}
 			ClanMessage.addMessage(clanMessage, index, flag);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:4684 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			Cout.println("LOI TAI CMD -= " + msg.command);
 		}
 	}
@@ -5099,6 +5146,7 @@ public class Controller : IMessageHandler
 		}
 		catch (Exception)
 		{
+			HsnrLog.Log("WAITLOGIN", "set TRUE @ Controller:loadCurrMap exception (Loadmap khong thanh cong)");
 			Res.err(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Loadmap khong thanh cong");
 			GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
 			ServerListScreen.waitToLogin = true;
@@ -5224,8 +5272,9 @@ public class Controller : IMessageHandler
 					{
 						LoginScr.isUpdateData = false;
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:5231 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						GameScr.vcData = -1;
 						Service.gI().updateData();
 					}
@@ -5246,8 +5295,9 @@ public class Controller : IMessageHandler
 						}
 						LoginScr.isUpdateMap = false;
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:5253 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						GameScr.vcMap = -1;
 						Service.gI().updateMap();
 					}
@@ -5268,8 +5318,9 @@ public class Controller : IMessageHandler
 						}
 						LoginScr.isUpdateSkill = false;
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:5275 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						GameScr.vcSkill = -1;
 						Service.gI().updateSkill();
 					}
@@ -5291,8 +5342,9 @@ public class Controller : IMessageHandler
 						loadItemNew(dataInputStream5.r, 100, isSave: false);
 						LoginScr.isUpdateItem = false;
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:5298 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						GameScr.vcItem = -1;
 						Service.gI().updateItem();
 					}
@@ -5301,8 +5353,9 @@ public class Controller : IMessageHandler
 						DataInputStream dataInputStream6 = new DataInputStream(Rms.loadRMS("NRitem101"));
 						loadItemNew(dataInputStream6.r, 101, isSave: false);
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:5308 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					}
 				}
 				if (!GameScr.isLoadAllData)
@@ -5389,11 +5442,13 @@ public class Controller : IMessageHandler
 					}
 					catch (Exception ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:5394 caught: " + ex.GetType().Name + " " + ex.Message);
 						Res.err(" 1 LOI TAI CASE REQUEST_MAPTEMPLATE " + ex.ToString());
 					}
 				}
 				catch (Exception ex2)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:5399 caught: " + ex2.GetType().Name + " " + ex2.Message);
 					Res.err("2 LOI TAI CASE REQUEST_MAPTEMPLATE " + ex2.ToString());
 				}
 				msg.cleanup();
@@ -5408,6 +5463,7 @@ public class Controller : IMessageHandler
 		}
 		catch (Exception ex8)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:5413 caught: " + ex8.GetType().Name + " " + ex8.Message);
 			Cout.LogError("LOI TAI messageNotMap=== " + msg.command + "  >>" + ex8.StackTrace);
 		}
 		finally
@@ -5434,14 +5490,16 @@ public class Controller : IMessageHandler
 					sbyte b2 = msg.reader().readByte();
 					Panel.CanNapTien = b2 == 1;
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:5441 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				isGet_CLIENT_INFO = true;
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:5447 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		finally
 		{
@@ -5613,8 +5671,9 @@ public class Controller : IMessageHandler
 						}
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:5620 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				Char.myCharz().arrItemBag = new Item[msg.reader().readByte()];
 				GameScr.hpPotion = 0;
@@ -5728,8 +5787,9 @@ public class Controller : IMessageHandler
 					Char.myCharz().idHat = msg.reader().readShort();
 					break;
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:5735 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					break;
 				}
 			}
@@ -5816,8 +5876,9 @@ public class Controller : IMessageHandler
 						Effect.GetCharEff(obj);
 						break;
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:5823 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						break;
 					}
 				}
@@ -5937,8 +5998,9 @@ public class Controller : IMessageHandler
 					obj.cHPFull = msg.reader().readLong();
 					break;
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:5944 caught: " + _ex.GetType().Name + " " + _ex.Message);
 					break;
 				}
 			}
@@ -6054,6 +6116,7 @@ public class Controller : IMessageHandler
 		}
 		catch (Exception ex5)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6059 caught: " + ex5.GetType().Name + " " + ex5.Message);
 			Cout.println("Loi tai Sub : " + ex5.ToString());
 		}
 		finally
@@ -6144,6 +6207,7 @@ public class Controller : IMessageHandler
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6149 caught: " + ex.GetType().Name + " " + ex.Message);
 			ex.StackTrace.ToString();
 		}
 		return false;
@@ -6163,8 +6227,9 @@ public class Controller : IMessageHandler
 			{
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6170 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -6174,8 +6239,9 @@ public class Controller : IMessageHandler
 		{
 			loadItemNew(d, -1, isSave: true);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6181 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -6186,10 +6252,13 @@ public class Controller : IMessageHandler
 			d.mark(1000000);
 			GameScr.vcItem = d.readByte();
 			type = d.readByte();
+			HsnrLog.Log("ITEM", "loadItemNew vcItem=" + GameScr.vcItem + " type=" + type + " avail=" + d.available());
 			Res.err(GameScr.vcItem + ":<<GameScr.vcItem >>>>>>loadItemNew: " + type + "  isSave:" + isSave);
 			if (type == 0)
 			{
-				GameScr.gI().iOptionTemplates = new ItemOptionTemplate[d.readShort()];
+				int optCount = d.readShort();
+				HsnrLog.Log("ITEM0", "iOptionTemplates count=" + optCount + " avail=" + d.available());
+				GameScr.gI().iOptionTemplates = new ItemOptionTemplate[optCount];
 				for (int i = 0; i < GameScr.gI().iOptionTemplates.Length; i++)
 				{
 					GameScr.gI().iOptionTemplates[i] = new ItemOptionTemplate();
@@ -6206,8 +6275,9 @@ public class Controller : IMessageHandler
 						GameScr.gI().iOptionTemplates[num2].color = d.readUnsignedByte();
 					}
 				}
-				catch (Exception)
+				catch (Exception _ex)
 				{
+					HsnrLog.Log("CATCH", "Controller.cs:6213 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
 				if (isSave)
 				{
@@ -6221,10 +6291,28 @@ public class Controller : IMessageHandler
 			{
 				ItemTemplates.itemTemplates.clear();
 				int num3 = d.readShort();
+				HsnrLog.Log("ITEM1", "ItemTemplates count=" + num3 + " avail=" + d.available());
 				for (int k = 0; k < num3; k++)
 				{
-					ItemTemplate it = new ItemTemplate((short)k, d.readByte(), d.readByte(), d.readUTF(), d.readUTF(), d.readByte(), d.readInt(), d.readShort(), d.readShort(), d.readBoolean());
-					ItemTemplates.add(it);
+					try
+					{
+						sbyte f1 = d.readByte();
+						sbyte f2 = d.readByte();
+						string f3 = d.readUTF();
+						string f4 = d.readUTF();
+						sbyte f5 = d.readByte();
+						int f6 = d.readInt();
+						short f7 = d.readShort();
+						short f8 = d.readShort();
+						bool f9 = d.readBoolean();
+						ItemTemplate it = new ItemTemplate((short)k, f1, f2, f3, f4, f5, f6, f7, f8, f9);
+						ItemTemplates.add(it);
+					}
+					catch (Exception itEx)
+					{
+						HsnrLog.Log("ITEM1", "FAIL at k=" + k + "/" + num3 + " avail=" + d.available() + " err=" + itEx.GetType().Name + " " + itEx.Message);
+						throw;
+					}
 				}
 				if (isSave)
 				{
@@ -6279,8 +6367,9 @@ public class Controller : IMessageHandler
 						}
 						return;
 					}
-					catch (Exception)
+					catch (Exception _ex)
 					{
+						HsnrLog.Log("CATCH", "Controller.cs:6286 caught: " + _ex.GetType().Name + " " + _ex.Message);
 						Char.Arr_Head_FlyMove = new short[0];
 						return;
 					}
@@ -6289,6 +6378,7 @@ public class Controller : IMessageHandler
 		}
 		catch (Exception ex3)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6294 caught: " + ex3.GetType().Name + " " + ex3.Message);
 			ex3.ToString();
 		}
 	}
@@ -6310,8 +6400,9 @@ public class Controller : IMessageHandler
 			}
 			frameHT_NEWBOSS.put(mobTemplateId + string.Empty, array);
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6317 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -6332,8 +6423,9 @@ public class Controller : IMessageHandler
 				}
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6339 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 		return array;
 	}
@@ -6348,8 +6440,9 @@ public class Controller : IMessageHandler
 				readPhuBan_CHIENTRUONGNAMEK(msg, b);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6355 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -6415,8 +6508,9 @@ public class Controller : IMessageHandler
 				}
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6422 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -6514,8 +6608,9 @@ public class Controller : IMessageHandler
 				readExtra(b, msg);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6521 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -6529,8 +6624,9 @@ public class Controller : IMessageHandler
 			{
 				b = msg.reader().readSByte();
 			}
-			catch (Exception)
+			catch (Exception _ex)
 			{
+				HsnrLog.Log("CATCH", "Controller.cs:6536 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			}
 			if (b == 0)
 			{
@@ -6610,8 +6706,9 @@ public class Controller : IMessageHandler
 				GameScr.info1.addInfo(mResources.hasJustUpgrade1 + skill3.template.name + mResources.hasJustUpgrade2 + skill3.point, 0);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6617 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 
@@ -6653,8 +6750,9 @@ public class Controller : IMessageHandler
 					}
 				}
 			}
-			catch (Exception)
+			catch (Exception _ex)
 			{
+				HsnrLog.Log("CATCH", "Controller.cs:6660 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			}
 			isEXTRA_LINK = true;
 			ServerListScreen.saveRMS_ExtraLink();
@@ -6675,8 +6773,9 @@ public class Controller : IMessageHandler
 					flag2 = true;
 				}
 			}
-			catch (Exception)
+			catch (Exception _ex)
 			{
+				HsnrLog.Log("CATCH", "Controller.cs:6682 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			}
 			if (!ServerListScreen.isHaveChar && !flag && !flag2)
 			{
@@ -6699,8 +6798,9 @@ public class Controller : IMessageHandler
 				GameCanvas.serverScreen.Login_New();
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6706 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			Res.outz(">>>>read.isEXTRA_LINK  errr:");
 			GameCanvas.serverScr.switchToMe();
 		}
@@ -6718,8 +6818,9 @@ public class Controller : IMessageHandler
 				result = new ItemOption(num, param);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6725 caught: " + _ex.GetType().Name + " " + _ex.Message);
 			Res.err(">>>>read.ItemOption  errr:");
 		}
 		return result;
@@ -6736,8 +6837,9 @@ public class Controller : IMessageHandler
 				loadItemNew(msg.reader(), 1, isSave: true);
 			}
 		}
-		catch (Exception)
+		catch (Exception _ex)
 		{
+			HsnrLog.Log("CATCH", "Controller.cs:6743 caught: " + _ex.GetType().Name + " " + _ex.Message);
 		}
 	}
 }
