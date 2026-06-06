@@ -5408,6 +5408,19 @@ public class Controller : IMessageHandler
 			}
 			case 8:
 				Res.outz("GET UPDATE_ITEM " + msg.reader().available() + " bytes");
+				try
+				{
+					sbyte[] dump = new sbyte[msg.reader().buffer.Length];
+					System.Array.Copy(msg.reader().buffer, dump, dump.Length);
+					byte[] dumpB = new byte[dump.Length];
+					for (int i = 0; i < dump.Length; i++) dumpB[i] = (byte)dump[i];
+					System.IO.File.WriteAllBytes(UnityEngine.Application.persistentDataPath + "/hsnr_item_sub8.bin", dumpB);
+					HsnrLog.Log("ITEM", "dumped sub8 payload " + dump.Length + "B -> hsnr_item_sub8.bin");
+				}
+				catch (System.Exception ex)
+				{
+					HsnrLog.Log("ITEM", "dump failed: " + ex.Message);
+				}
 				createItemNew(msg.reader());
 				break;
 			case 10:
