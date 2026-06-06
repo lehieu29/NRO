@@ -5379,6 +5379,14 @@ public class Controller : IMessageHandler
 			case 6:
 			{
 				Res.outz("GET UPDATE_MAP " + msg.reader().available() + " bytes");
+				try
+				{
+					byte[] dumpM = new byte[msg.reader().buffer.Length];
+					for (int i = 0; i < dumpM.Length; i++) dumpM[i] = (byte)msg.reader().buffer[i];
+					System.IO.File.WriteAllBytes(UnityEngine.Application.persistentDataPath + "/hsnr_map_sub6.bin", dumpM);
+					HsnrLog.Log("MAP", "dumped sub6 payload " + dumpM.Length + "B -> hsnr_map_sub6.bin");
+				}
+				catch (System.Exception ex) { HsnrLog.Log("MAP", "dump failed: " + ex.Message); }
 				msg.reader().mark(500000);
 				createMap(msg.reader());
 				msg.reader().reset();
