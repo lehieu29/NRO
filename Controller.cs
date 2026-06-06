@@ -4569,6 +4569,11 @@ public class Controller : IMessageHandler
 
 	private void createMap(myReader d)
 	{
+		if (HsnrConfig.useHsnrProtocol)
+		{
+			createMapHsnr(d);
+			return;
+		}
 		GameScr.vcMap = d.readByte();
 		TileMap.mapNames = new string[d.readShort()];
 		for (int i = 0; i < TileMap.mapNames.Length; i++)
@@ -4605,6 +4610,70 @@ public class Controller : IMessageHandler
 			Mob.arrMobTemplate[l].rangeMove = d.readByte();
 			Mob.arrMobTemplate[l].speed = d.readByte();
 			Mob.arrMobTemplate[l].dartType = d.readByte();
+		}
+	}
+
+	// HSNR createMap (verify Ghidra bp$$bcm @0x1803384E0).
+	// KHÁC Client: MobTemplate có thêm 1 byte (vào field +0x13) ngay sau `type`,
+	// trước UTF name. Các block khác giống Client.
+	private void createMapHsnr(myReader d)
+	{
+		try
+		{
+			GameScr.vcMap = d.readByte();
+			HsnrLog.Log("MAPHSNR", "vcMap=" + GameScr.vcMap + " avail=" + d.available());
+			int mapCount = d.readShort();
+			HsnrLog.Log("MAPHSNR", "mapNames count=" + mapCount);
+			TileMap.mapNames = new string[mapCount];
+			for (int i = 0; i < mapCount; i++)
+			{
+				TileMap.mapNames[i] = d.readUTF();
+			}
+
+			int npcCount = d.readByte();
+			HsnrLog.Log("MAPHSNR", "npcTemplate count=" + npcCount);
+			Npc.arrNpcTemplate = new NpcTemplate[npcCount];
+			for (sbyte b = 0; b < npcCount; b++)
+			{
+				Npc.arrNpcTemplate[b] = new NpcTemplate();
+				Npc.arrNpcTemplate[b].npcTemplateId = b;
+				Npc.arrNpcTemplate[b].name = d.readUTF();
+				Npc.arrNpcTemplate[b].headId = d.readShort();
+				Npc.arrNpcTemplate[b].bodyId = d.readShort();
+				Npc.arrNpcTemplate[b].legId = d.readShort();
+				int menuRows = d.readByte();
+				Npc.arrNpcTemplate[b].menu = new string[menuRows][];
+				for (int j = 0; j < menuRows; j++)
+				{
+					int menuCols = d.readByte();
+					Npc.arrNpcTemplate[b].menu[j] = new string[menuCols];
+					for (int k = 0; k < menuCols; k++)
+					{
+						Npc.arrNpcTemplate[b].menu[j][k] = d.readUTF();
+					}
+				}
+			}
+
+			int mobCount = d.readShort();
+			HsnrLog.Log("MAPHSNR", "mobTemplate count=" + mobCount);
+			Mob.arrMobTemplate = new MobTemplate[mobCount];
+			for (int l = 0; l < mobCount; l++)
+			{
+				Mob.arrMobTemplate[l] = new MobTemplate();
+				Mob.arrMobTemplate[l].mobTemplateId = l;
+				Mob.arrMobTemplate[l].type = d.readByte();
+				d.readByte();                                 // HSNR: byte phụ (offset +0x13 trong native), client gốc không có
+				Mob.arrMobTemplate[l].name = d.readUTF();
+				Mob.arrMobTemplate[l].hp = d.readLong();
+				Mob.arrMobTemplate[l].rangeMove = d.readByte();
+				Mob.arrMobTemplate[l].speed = d.readByte();
+				Mob.arrMobTemplate[l].dartType = d.readByte();
+			}
+			HsnrLog.Log("MAPHSNR", "DONE avail=" + d.available());
+		}
+		catch (Exception ex)
+		{
+			HsnrLog.Log("MAPHSNR", "FAIL: " + ex.GetType().Name + " " + ex.Message);
 		}
 	}
 
