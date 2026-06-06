@@ -5204,6 +5204,7 @@ public class Controller : IMessageHandler
 		GameCanvas.debug("SA6", 2);
 		try
 		{
+			HsnrLog.LogBytes("CMD-28", "messageNotMap payload (first 64B)", msg.reader().buffer);
 			sbyte b = msg.reader().readByte();
 			Res.outz("---messageNotMap : " + b);
 			switch (b)
