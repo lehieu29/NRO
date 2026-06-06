@@ -6261,6 +6261,11 @@ public class Controller : IMessageHandler
 
 	private void loadItemNew(myReader d, sbyte type, bool isSave)
 	{
+		if (HsnrConfig.useHsnrProtocol)
+		{
+			loadItemNewHsnr(d, isSave);
+			return;
+		}
 		try
 		{
 			d.mark(1000000);
@@ -6394,6 +6399,107 @@ public class Controller : IMessageHandler
 		{
 			HsnrLog.Log("CATCH", "Controller.cs:6294 caught: " + ex3.GetType().Name + " " + ex3.Message);
 			ex3.ToString();
+		}
+	}
+
+	// HSNR layout (verify từ Ghidra bp$$bdb @0x180346E90 + parse offline 227700/227700 byte sạch):
+	//   byte vcItem
+	//   short count_options;       for: short id, UTF name, byte type
+	//   short count_itemTemplates; for: short id, byte type, byte part, UTF name, UTF desc,
+	//                                   byte icon, int dura, short req, short ?, bool
+	//   byte count_arr_head_2fr;   for: byte
+	//   short count_pet;           for: short, short, short, bool
+	// Khác Client gốc (switch theo type=0/1/100/101) — HSNR gộp 4 block tuần tự, không type byte.
+	private void loadItemNewHsnr(myReader d, bool isSave)
+	{
+		try
+		{
+			d.mark(1000000);
+			GameScr.vcItem = d.readByte();
+			HsnrLog.Log("ITEMHSNR", "vcItem=" + GameScr.vcItem + " avail=" + d.available());
+
+			// Block 1: ItemOptionTemplates
+			int optCount = d.readShort();
+			HsnrLog.Log("ITEMHSNR", "options count=" + optCount);
+			GameScr.gI().iOptionTemplates = new ItemOptionTemplate[optCount];
+			for (int k = 0; k < optCount; k++)
+			{
+				int id = d.readShort();
+				string name = d.readUTF();
+				sbyte t = d.readByte();
+				GameScr.gI().iOptionTemplates[k] = new ItemOptionTemplate
+				{
+					id = id,
+					name = name,
+					type = t
+				};
+			}
+
+			// Block 2: ItemTemplate
+			int itemCount = d.readShort();
+			HsnrLog.Log("ITEMHSNR", "itemTemplates count=" + itemCount);
+			ItemTemplates.itemTemplates.clear();
+			for (int k = 0; k < itemCount; k++)
+			{
+				short id = d.readShort();
+				sbyte type = d.readByte();
+				sbyte part = d.readByte();
+				string name = d.readUTF();
+				string desc = d.readUTF();
+				sbyte icon = d.readByte();
+				int dura = d.readInt();
+				short req = d.readShort();
+				short extra = d.readShort();
+				bool flag = d.readBoolean();
+				// ItemTemplate ctor: (id, type, gender, name, desc, level, strRequire, iconID, part, isUpToUp)
+				// HSNR map: id, type, part(=gender slot? actually 'part'), name, desc, icon, dura, req, extra, flag
+				// Client field 'gender' is unused in HSNR — pass `part` as gender; iconID/part shifted.
+				ItemTemplate it = new ItemTemplate(id, type, part, name, desc, icon, dura, req, extra, flag);
+				ItemTemplates.add(it);
+			}
+
+			// Block 3: Arr_Head_2Fr (HSNR = byte count + bytes; Client gốc dùng int[][]).
+			// Đọc đúng theo HSNR (byte+bytes) để giữ stream sync, lưu vào array dummy
+			// kiểu khớp Client (int[][1] mỗi entry chứa 1 int) cho code kế dùng được.
+			int headCount = d.readByte();
+			HsnrLog.Log("ITEMHSNR", "arrHead2Fr count=" + headCount);
+			Char.Arr_Head_2Fr = new int[headCount][];
+			for (int k = 0; k < headCount; k++)
+			{
+				Char.Arr_Head_2Fr[k] = new int[1] { d.readByte() };
+			}
+
+			// Block 4: Arr_Head_FlyMove (short count + 4 fields per entry).
+			// Client `Arr_Head_FlyMove` là `short[]` lưu 1 short/entry. HSNR gửi 4 fields:
+			// short, short, short, bool — ta giữ field đầu (id/template) cho tương thích UI.
+			int petCount = d.readShort();
+			HsnrLog.Log("ITEMHSNR", "flymove count=" + petCount);
+			Char.Arr_Head_FlyMove = new short[petCount];
+			for (int k = 0; k < petCount; k++)
+			{
+				Char.Arr_Head_FlyMove[k] = d.readShort();
+				d.readShort();
+				d.readShort();
+				d.readBoolean();
+			}
+
+			HsnrLog.Log("ITEMHSNR", "DONE pos consumed, avail=" + d.available());
+
+			if (isSave)
+			{
+				d.reset();
+				sbyte[] data = new sbyte[d.available()];
+				d.readFully(ref data);
+				Rms.saveRMS("NRitem1", data);
+				sbyte[] ver = new sbyte[1] { GameScr.vcItem };
+				Rms.saveRMS("NRitemVersion", ver);
+			}
+			LoginScr.isUpdateItem = false;
+			GameScr.gI().readOk();
+		}
+		catch (Exception ex)
+		{
+			HsnrLog.Log("ITEMHSNR", "FAIL: " + ex.GetType().Name + " " + ex.Message);
 		}
 	}
 
