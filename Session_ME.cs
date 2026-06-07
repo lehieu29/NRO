@@ -250,6 +250,10 @@ public class Session_ME : ISession
 					array[i] = readKey(array[i]);
 				}
 			}
+			if (HsnrConfig.useHsnrProtocol && (cmd == 11 || cmd == -28))
+			{
+				HsnrLog.DumpFull("DUMP3B" + cmd, array, num4);
+			}
 			return new Message(cmd, array);
 		}
 
@@ -303,7 +307,20 @@ public class Session_ME : ISession
 						array[i] = readKey(array[i]);
 					}
 				}
+				// HSNR wire-format: native readMessage (FUN_180268590) DAO NGUOC toan bo
+				// payload cho MOI message 2-byte length (qua jg.ddq @0x1801F2990 = reverse thuan).
+				// Message 3-byte (map/resource) giu nguyen (da return o tren). Da verify bang
+				// du lieu that: dao payload cmd=40 -> parse Client goc fit 245/245; cmd=-30 ->
+				// cName="saokim". KHONG sua layout handler, chi can dao truoc khi parse.
+				if (HsnrConfig.useHsnrProtocol && getKeyComplete)
+				{
+					Array.Reverse(array);
+				}
 				HsnrLog.LogBytes("RECV", "cmd=" + b + " len=" + num + " ascii=\"" + HsnrLog.Ascii(array) + "\"", array, num);
+				if (HsnrConfig.useHsnrProtocol && (b == -24 || b == -64 || b == 11))
+				{
+					HsnrLog.DumpFull("DUMP2B" + b, array, num);
+				}
 				return new Message(b, array);
 			}
 			catch (Exception ex)

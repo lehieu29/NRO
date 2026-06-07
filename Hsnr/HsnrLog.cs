@@ -88,6 +88,25 @@ public static class HsnrLog
 		return sb.ToString();
 	}
 
+	// Dump TOAN BO hex (khong cap 64B) ra file rieng de parse offline.
+	// Dung de reverse wire-format cac lenh char/task ma decompile khong khop.
+	public static void DumpFull(string tag, sbyte[] data, int len = -1)
+	{
+		if (!HsnrConfig.enableLog) return;
+		EnsureInit();
+		if (data == null) { Log(tag, "DUMP (null)"); return; }
+		if (len < 0) len = data.Length;
+		if (len > data.Length) len = data.Length;
+		StringBuilder sb = new StringBuilder(len * 3 + 32);
+		sb.Append("DUMP len=").Append(len).Append(" hex=");
+		for (int i = 0; i < len; i++)
+		{
+			sb.Append(((byte)data[i]).ToString("X2"));
+			if (i < len - 1) sb.Append(' ');
+		}
+		Log(tag, sb.ToString());
+	}
+
 	// Chuyển sbyte[] -> chuỗi ASCII đọc được (ký tự ngoài 32..126 thành '.').
 	public static string Ascii(sbyte[] data, int len = -1)
 	{

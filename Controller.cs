@@ -1394,7 +1394,9 @@ public class Controller : IMessageHandler
 			case -64:
 			{
 				int num49 = msg.reader().readInt();
-				int num50 = msg.reader().readShort();
+				// HSNR: native cmd=-64 doc bag = readByte (FUN_1801ef220), client goc readShort.
+				// Payload that 5B (00 03 65 8D FF) = int(4)+byte(1) khit; readShort gay tran.
+				int num50 = (HsnrConfig.useHsnrProtocol ? msg.reader().readByte() : msg.reader().readShort());
 				obj = null;
 				obj = ((num49 != Char.myCharz().charID) ? GameScr.findCharInMap(num49) : Char.myCharz());
 				if (obj == null)
@@ -1710,6 +1712,33 @@ public class Controller : IMessageHandler
 				break;
 			}
 			case -42:
+				if (HsnrConfig.useHsnrProtocol)
+				{
+					// HSNR native onMessage case -0xffffff2a (verify offset): 7×readLong dau
+					// (cHPGoc/cMPGoc/cDamGoc widen int->long), roi cDefull=readInt (KHONG long),
+					// cDefGoc=readShort (KHONG int), va DUNG sau cCriticalGoc — KHONG co
+					// cGiamST/cCritDameFull. Tong 86 byte = khop payload that.
+					Char.myCharz().cHPGoc = (int)msg.reader().readLong();
+					Char.myCharz().cMPGoc = (int)msg.reader().readLong();
+					Char.myCharz().cDamGoc = (int)msg.reader().readLong();
+					Char.myCharz().cHPFull = msg.reader().readLong();
+					Char.myCharz().cMPFull = msg.reader().readLong();
+					Char.myCharz().cHP = msg.reader().readLong();
+					Char.myCharz().cMP = msg.reader().readLong();
+					Char.myCharz().cspeed = msg.reader().readByte();
+					Char.myCharz().hpFrom1000TiemNang = msg.reader().readByte();
+					Char.myCharz().mpFrom1000TiemNang = msg.reader().readByte();
+					Char.myCharz().damFrom1000TiemNang = msg.reader().readByte();
+					Char.myCharz().cDamFull = msg.reader().readLong();
+					Char.myCharz().cDefull = msg.reader().readInt();
+					Char.myCharz().cCriticalFull = msg.reader().readByte();
+					Char.myCharz().cTiemNang = msg.reader().readLong();
+					Char.myCharz().expForOneAdd = msg.reader().readShort();
+					Char.myCharz().cDefGoc = msg.reader().readShort();
+					Char.myCharz().cCriticalGoc = msg.reader().readByte();
+					InfoDlg.hide();
+					break;
+				}
 				Char.myCharz().cHPGoc = msg.readInt3Byte();
 				Char.myCharz().cMPGoc = msg.readInt3Byte();
 				Char.myCharz().cDamGoc = msg.reader().readInt();
@@ -2598,7 +2627,14 @@ public class Controller : IMessageHandler
 			case 11:
 			{
 				GameCanvas.debug("SA9", 2);
-				int num14 = msg.reader().readShort();
+				// HSNR: native cmd=11 (onMessage case '\v') doc mobId = readByte (FUN_1801ef220),
+				// KHONG phai readShort nhu client goc. Va MobTemplate.data (EffectData) chua duoc
+				// khoi tao trong createMapHsnr -> phai guard null (giong Mob.cs:373).
+				int num14 = (HsnrConfig.useHsnrProtocol ? msg.reader().readByte() : msg.reader().readShort());
+				if (HsnrConfig.useHsnrProtocol && Mob.arrMobTemplate[num14].data == null)
+				{
+					Mob.arrMobTemplate[num14].data = new EffectData();
+				}
 				sbyte b10 = msg.reader().readByte();
 				if (b10 != 0)
 				{
@@ -4654,7 +4690,10 @@ public class Controller : IMessageHandler
 				}
 			}
 
-			int mobCount = d.readShort();
+			// HSNR: mobTemplateCount = readByte (1 byte), KHONG phai readShort (2 byte)
+			// Verify Ghidra bp$$bcm @0x1803384E0: FUN_1801ef220 (readByte signed) goi sau NPC loop
+			// truoc khi alloc MobTemplate[count]. Log cu doc count=27136 (0x6A00) la sai (lech 1 byte).
+			int mobCount = d.readByte();
 			HsnrLog.Log("MAPHSNR", "mobTemplate count=" + mobCount);
 			Mob.arrMobTemplate = new MobTemplate[mobCount];
 			for (int l = 0; l < mobCount; l++)
@@ -4890,6 +4929,11 @@ public class Controller : IMessageHandler
 
 	public void loadInfoMap(Message msg)
 	{
+		if (HsnrConfig.useHsnrProtocol)
+		{
+			loadInfoMapHsnr(msg);
+			return;
+		}
 		try
 		{
 			if (mGraphics.zoomLevel == 1)
@@ -5216,6 +5260,356 @@ public class Controller : IMessageHandler
 		catch (Exception)
 		{
 			HsnrLog.Log("WAITLOGIN", "set TRUE @ Controller:loadCurrMap exception (Loadmap khong thanh cong)");
+			Res.err(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Loadmap khong thanh cong");
+			GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
+			ServerListScreen.waitToLogin = true;
+			GameCanvas.endDlg();
+		}
+		GameCanvas.isLoading = false;
+		Res.err(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Loadmap thanh cong");
+	}
+
+	// HSNR loadInfoMap (verify Ghidra bp$$bcs @0x18033A700, 54 reader-calls).
+	// KHAC Client goc dung 2 cho:
+	//   (a) Mob loop: native doc readInt(0x33B1CF) thay 3 bool dau (goi bitfield) roi 2 bool.
+	//       => +1 byte/mob so voi Client (5 bool -> int + 2 bool).
+	//   (b) Item loop: itemMapID doc readInt thay readShort => +2 byte/item.
+	// Moi block khac (cx/cy, waypoint, NPC, BgItem high/low-graphic, key-value, bgType, teleport)
+	// doc GIONG het Client => clone nguyen van.
+	private void loadInfoMapHsnr(Message msg)
+	{
+		try
+		{
+			if (mGraphics.zoomLevel == 1)
+			{
+				SmallImage.clearHastable();
+			}
+			Char.myCharz().cx = (Char.myCharz().cxSend = (Char.myCharz().cxFocus = msg.reader().readShort()));
+			Char.myCharz().cy = (Char.myCharz().cySend = (Char.myCharz().cyFocus = msg.reader().readShort()));
+			Char.myCharz().xSd = Char.myCharz().cx;
+			Char.myCharz().ySd = Char.myCharz().cy;
+			HsnrLog.Log("MAPINFO", "cx=" + Char.myCharz().cx + " cy=" + Char.myCharz().cy + " avail=" + msg.reader().available());
+			if (Char.myCharz().cx >= 0 && Char.myCharz().cx <= 100)
+			{
+				Char.myCharz().cdir = 1;
+			}
+			else if (Char.myCharz().cx >= TileMap.tmw - 100 && Char.myCharz().cx <= TileMap.tmw)
+			{
+				Char.myCharz().cdir = -1;
+			}
+			int num = msg.reader().readByte();
+			HsnrLog.Log("MAPINFO", "vGo size=" + num + " avail=" + msg.reader().available());
+			if (!GameScr.info1.isDone)
+			{
+				GameScr.info1.cmx = Char.myCharz().cx - GameScr.cmx;
+				GameScr.info1.cmy = Char.myCharz().cy - GameScr.cmy;
+			}
+			for (int i = 0; i < num; i++)
+			{
+				Waypoint waypoint = new Waypoint(msg.reader().readShort(), msg.reader().readShort(), msg.reader().readShort(), msg.reader().readShort(), msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readUTF());
+				if ((TileMap.mapID != 21 && TileMap.mapID != 22 && TileMap.mapID != 23) || waypoint.minX < 0 || waypoint.minX <= 24)
+				{
+				}
+			}
+			Resources.UnloadUnusedAssets();
+			GC.Collect();
+			num = msg.reader().readByte();
+			HsnrLog.Log("MAPINFO", "mob size=" + num + " avail=" + msg.reader().available());
+			Mob.newMob.removeAllElements();
+			for (sbyte b = 0; b < num; b++)
+			{
+				// HSNR: 3 bool dau (isDisable/isDontMove/isFire) goi vao 1 int bitfield, sau do 2 bool (isIce/isWind).
+				int mobFlags = msg.reader().readInt();
+				bool isDisable = (mobFlags & 1) != 0;
+				bool isDontMove = (mobFlags & 2) != 0;
+				bool isFire = (mobFlags & 4) != 0;
+				Mob mob = new Mob(b, isDisable, isDontMove, isFire, msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readShort(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readShort(), msg.reader().readShort(), msg.reader().readByte(), msg.reader().readByte());
+				mob.xSd = mob.x;
+				mob.ySd = mob.y;
+				mob.isBoss = msg.reader().readBoolean();
+				if (Mob.arrMobTemplate[mob.templateId].type != 0)
+				{
+					if (b % 3 == 0)
+					{
+						mob.dir = -1;
+					}
+					else
+					{
+						mob.dir = 1;
+					}
+					mob.x += 10 - b % 20;
+				}
+				mob.isMobMe = false;
+				BigBoss bigBoss = null;
+				BachTuoc bachTuoc = null;
+				BigBoss2 bigBoss2 = null;
+				NewBoss newBoss = null;
+				if (mob.templateId == 70)
+				{
+					bigBoss = new BigBoss(b, (short)mob.x, (short)mob.y, 70, mob.hp, mob.maxHp, mob.sys);
+				}
+				if (mob.templateId == 71)
+				{
+					bachTuoc = new BachTuoc(b, (short)mob.x, (short)mob.y, 71, mob.hp, mob.maxHp, mob.sys);
+				}
+				if (mob.templateId == 72)
+				{
+					bigBoss2 = new BigBoss2(b, (short)mob.x, (short)mob.y, 72, mob.hp, mob.maxHp, 3);
+				}
+				if (mob.isBoss)
+				{
+					newBoss = new NewBoss(b, (short)mob.x, (short)mob.y, mob.templateId, mob.hp, mob.maxHp, mob.sys);
+				}
+				if (newBoss != null)
+				{
+					GameScr.vMob.addElement(newBoss);
+				}
+				else if (bigBoss != null)
+				{
+					GameScr.vMob.addElement(bigBoss);
+				}
+				else if (bachTuoc != null)
+				{
+					GameScr.vMob.addElement(bachTuoc);
+				}
+				else if (bigBoss2 != null)
+				{
+					GameScr.vMob.addElement(bigBoss2);
+				}
+				else
+				{
+					GameScr.vMob.addElement(mob);
+				}
+			}
+			if (Char.myCharz().mobMe != null && GameScr.findMobInMap(Char.myCharz().mobMe.mobId) == null)
+			{
+				Char.myCharz().mobMe.getData();
+				Char.myCharz().mobMe.x = Char.myCharz().cx;
+				Char.myCharz().mobMe.y = Char.myCharz().cy - 40;
+				GameScr.vMob.addElement(Char.myCharz().mobMe);
+			}
+			num = msg.reader().readByte();
+			HsnrLog.Log("MAPINFO", "block3 size=" + num + " avail=" + msg.reader().available());
+			for (byte b2 = 0; b2 < num; b2++)
+			{
+			}
+			num = msg.reader().readByte();
+			HsnrLog.Log("MAPINFO", "NPC size=" + num + " avail=" + msg.reader().available());
+			for (int j = 0; j < num; j++)
+			{
+				sbyte b3 = msg.reader().readByte();
+				short cx = msg.reader().readShort();
+				short num2 = msg.reader().readShort();
+				sbyte b4 = msg.reader().readByte();
+				short num3 = msg.reader().readShort();
+				if (b4 != 6 && ((Char.myCharz().taskMaint.taskId >= 7 && (Char.myCharz().taskMaint.taskId != 7 || Char.myCharz().taskMaint.index > 1)) || (b4 != 7 && b4 != 8 && b4 != 9)) && (Char.myCharz().taskMaint.taskId >= 6 || b4 != 16))
+				{
+					if (b4 == 4)
+					{
+						GameScr.gI().magicTree = new MagicTree(j, b3, cx, num2, b4, num3);
+						Service.gI().magicTree(2);
+						GameScr.vNpc.addElement(GameScr.gI().magicTree);
+					}
+					else
+					{
+						Npc o = new Npc(j, b3, cx, num2 + 3, b4, num3);
+						GameScr.vNpc.addElement(o);
+					}
+				}
+			}
+			num = msg.reader().readByte();
+			string empty = string.Empty;
+			HsnrLog.Log("MAPINFO", "item size=" + num + " avail=" + msg.reader().available());
+			empty = empty + "item: " + num;
+			for (int k = 0; k < num; k++)
+			{
+				// HSNR: itemMapID doc int (4 byte) thay short (2 byte) so voi Client goc.
+				int itemMapID = msg.reader().readInt();
+				short num4 = msg.reader().readShort();
+				int x = msg.reader().readShort();
+				int y = msg.reader().readShort();
+				int num5 = msg.reader().readInt();
+				short r = 0;
+				if (num5 == -2)
+				{
+					r = msg.reader().readShort();
+				}
+				ItemMap itemMap = new ItemMap(num5, (short)itemMapID, num4, x, y, r);
+				itemMap.itemMapID = itemMapID;
+				bool flag = false;
+				for (int l = 0; l < GameScr.vItemMap.size(); l++)
+				{
+					ItemMap itemMap2 = (ItemMap)GameScr.vItemMap.elementAt(l);
+					if (itemMap2.itemMapID == itemMap.itemMapID)
+					{
+						flag = true;
+						break;
+					}
+				}
+				if (!flag)
+				{
+					GameScr.vItemMap.addElement(itemMap);
+				}
+				empty = empty + num4 + ",";
+			}
+			Res.err("sl item on map " + empty + "\n");
+			TileMap.vCurrItem.removeAllElements();
+			if (mGraphics.zoomLevel == 1)
+			{
+				BgItem.clearHashTable();
+			}
+			BgItem.vKeysNew.removeAllElements();
+			if (!GameCanvas.lowGraphic || (GameCanvas.lowGraphic && TileMap.isVoDaiMap()) || TileMap.mapID == 45 || TileMap.mapID == 46 || TileMap.mapID == 47 || TileMap.mapID == 48 || TileMap.mapID == 120 || TileMap.mapID == 128 || TileMap.mapID == 170 || TileMap.mapID == 49)
+			{
+				short num6 = msg.reader().readShort();
+				HsnrLog.Log("MAPINFO", "bgItem(high) size=" + num6 + " avail=" + msg.reader().available());
+				empty = "item high graphic: ";
+				for (int m = 0; m < num6; m++)
+				{
+					short num7 = msg.reader().readShort();
+					short num8 = msg.reader().readShort();
+					short num9 = msg.reader().readShort();
+					if (TileMap.getBIById(num7) != null)
+					{
+						BgItem bIById = TileMap.getBIById(num7);
+						BgItem bgItem = new BgItem();
+						bgItem.id = num7;
+						bgItem.idImage = bIById.idImage;
+						bgItem.dx = bIById.dx;
+						bgItem.dy = bIById.dy;
+						bgItem.x = num8 * TileMap.size;
+						bgItem.y = num9 * TileMap.size;
+						bgItem.layer = bIById.layer;
+						if (TileMap.isExistMoreOne(bgItem.id))
+						{
+							bgItem.trans = ((m % 2 != 0) ? 2 : 0);
+							if (TileMap.mapID == 45)
+							{
+								bgItem.trans = 0;
+							}
+						}
+						Image image = null;
+						if (!BgItem.imgNew.containsKey(bgItem.idImage + string.Empty))
+						{
+							if (mGraphics.zoomLevel == 1)
+							{
+								image = GameCanvas.loadImage("/mapBackGround/" + bgItem.idImage + ".png");
+								if (image == null)
+								{
+									image = Image.createRGBImage(new int[1], 1, 1, bl: true);
+									Service.gI().getBgTemplate(bgItem.idImage);
+								}
+								BgItem.imgNew.put(bgItem.idImage + string.Empty, image);
+							}
+							else
+							{
+								bool flag2 = false;
+								sbyte[] array = Rms.loadRMS(mGraphics.zoomLevel + "bgItem" + bgItem.idImage);
+								if (array != null)
+								{
+									if (BgItem.newSmallVersion != null)
+									{
+										if (array.Length % 127 != BgItem.newSmallVersion[bgItem.idImage])
+										{
+											flag2 = true;
+										}
+									}
+									if (!flag2)
+									{
+										image = Image.createImage(array, 0, array.Length);
+										if (image != null)
+										{
+											BgItem.imgNew.put(bgItem.idImage + string.Empty, image);
+										}
+										else
+										{
+											flag2 = true;
+										}
+									}
+								}
+								else
+								{
+									flag2 = true;
+								}
+								if (flag2)
+								{
+									image = GameCanvas.loadImage("/mapBackGround/" + bgItem.idImage + ".png");
+									if (image == null)
+									{
+										image = Image.createRGBImage(new int[1], 1, 1, bl: true);
+										Service.gI().getBgTemplate(bgItem.idImage);
+									}
+									BgItem.imgNew.put(bgItem.idImage + string.Empty, image);
+								}
+							}
+							BgItem.vKeysLast.addElement(bgItem.idImage + string.Empty);
+						}
+						if (!BgItem.isExistKeyNews(bgItem.idImage + string.Empty))
+						{
+							BgItem.vKeysNew.addElement(bgItem.idImage + string.Empty);
+						}
+						bgItem.changeColor();
+						TileMap.vCurrItem.addElement(bgItem);
+					}
+					empty = empty + num7 + ",";
+				}
+				Res.err("item High Graphics: " + empty);
+				for (int n = 0; n < BgItem.vKeysLast.size(); n++)
+				{
+					string text = (string)BgItem.vKeysLast.elementAt(n);
+					if (!BgItem.isExistKeyNews(text))
+					{
+						BgItem.imgNew.remove(text);
+						if (BgItem.imgNew.containsKey(text + "blend" + 1))
+						{
+							BgItem.imgNew.remove(text + "blend" + 1);
+						}
+						if (BgItem.imgNew.containsKey(text + "blend" + 3))
+						{
+							BgItem.imgNew.remove(text + "blend" + 3);
+						}
+						BgItem.vKeysLast.removeElementAt(n);
+						n--;
+					}
+				}
+				BackgroudEffect.isFog = false;
+				BackgroudEffect.nCloud = 0;
+				EffecMn.vEff.removeAllElements();
+				BackgroudEffect.vBgEffect.removeAllElements();
+				Effect.newEff.removeAllElements();
+				short num10 = msg.reader().readShort();
+				for (int num11 = 0; num11 < num10; num11++)
+				{
+					string key = msg.reader().readUTF();
+					string value = msg.reader().readUTF();
+					keyValueAction(key, value);
+				}
+			}
+			else
+			{
+				short num12 = msg.reader().readShort();
+				for (int num13 = 0; num13 < num12; num13++)
+				{
+					short num14 = msg.reader().readShort();
+					short num15 = msg.reader().readShort();
+					short num16 = msg.reader().readShort();
+				}
+				short num17 = msg.reader().readShort();
+				for (int num18 = 0; num18 < num17; num18++)
+				{
+					string text2 = msg.reader().readUTF();
+					string text3 = msg.reader().readUTF();
+				}
+			}
+			TileMap.bgType = msg.reader().readByte();
+			sbyte teleport = msg.reader().readByte();
+			HsnrLog.Log("MAPINFO", "DONE bgType=" + TileMap.bgType + " teleport=" + teleport + " avail=" + msg.reader().available());
+			loadCurrMap(teleport);
+		}
+		catch (Exception ex)
+		{
+			HsnrLog.Log("MAPINFO", "FAIL: " + ex.GetType().Name + " " + ex.Message);
+			HsnrLog.Log("WAITLOGIN", "set TRUE @ Controller:loadInfoMapHsnr exception (Loadmap khong thanh cong)");
 			Res.err(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Loadmap khong thanh cong");
 			GameCanvas.instance.doResetToLoginScr(GameCanvas.serverScreen);
 			ServerListScreen.waitToLogin = true;
@@ -5697,8 +6091,14 @@ public class Controller : IMessageHandler
 				Char.myCharz().cTypePk = msg.reader().readByte();
 				Char.myCharz().cPower = msg.reader().readLong();
 				Char.myCharz().applyCharLevelPercent();
-				Char.myCharz().eff5BuffHp = msg.reader().readShort();
-				Char.myCharz().eff5BuffMp = msg.reader().readShort();
+				if (!HsnrConfig.useHsnrProtocol)
+				{
+					// HSNR char-info (payload da dao nguoc): native bd.si() case 0 doc thang
+					// cPower(long) -> nClass(byte), KHONG co eff5BuffHp/Mp (2 field nay den tu
+					// sub 10/11/12/13). Verify offline: bo 2 field nay parse moi sach (name=saokim).
+					Char.myCharz().eff5BuffHp = msg.reader().readShort();
+					Char.myCharz().eff5BuffMp = msg.reader().readShort();
+				}
 				Char.myCharz().nClass = GameScr.nClasss[msg.reader().readByte()];
 				Char.myCharz().vSkill.removeAllElements();
 				Char.myCharz().vSkillFight.removeAllElements();
@@ -5713,8 +6113,16 @@ public class Controller : IMessageHandler
 				GameScr.gI().sortSkill();
 				GameScr.gI().loadSkillShortcut();
 				Char.myCharz().xu = msg.reader().readLong();
-				Char.myCharz().luongKhoa = msg.reader().readInt();
-				Char.myCharz().luong = msg.reader().readInt();
+				if (HsnrConfig.useHsnrProtocol)
+				{
+					// HSNR: sau xu(long) chi 1 int (luong), KHONG co luongKhoa (native doc 1 int).
+					Char.myCharz().luong = msg.reader().readInt();
+				}
+				else
+				{
+					Char.myCharz().luongKhoa = msg.reader().readInt();
+					Char.myCharz().luong = msg.reader().readInt();
+				}
 				Char.myCharz().xuStr = Res.formatNumber(Char.myCharz().xu);
 				Char.myCharz().luongStr = mSystem.numberTostring(Char.myCharz().luong);
 				Char.myCharz().luongKhoaStr = mSystem.numberTostring(Char.myCharz().luongKhoa);

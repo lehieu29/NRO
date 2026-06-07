@@ -2669,6 +2669,21 @@ public class Service
 		try
 		{
 			message = new Message((sbyte)(-39));
+			if (HsnrConfig.useHsnrProtocol)
+			{
+				// HSNR native (pcap C2S MSG17): finishLoadMap(-39) mang device UUID
+				// = writeByte(0) + writeUTF(uuid), KHONG rong nhu client goc. Server
+				// nhan -39 thieu UUID -> coi client bat hop le -> kick sau ~5s.
+				string uuid = Rms.loadRMSString("hsnr_device_uuid");
+				if (uuid == null || uuid.Length != 36)
+				{
+					uuid = Guid.NewGuid().ToString();
+					Rms.saveRMSString("hsnr_device_uuid", uuid);
+				}
+				message.writer().writeByte((sbyte)0);
+				message.writer().writeUTF(uuid);
+				HsnrLog.Log("LOGIN", "finishLoadMap cmd=-39 uuid=" + uuid);
+			}
 			session.sendMessage(message);
 		}
 		catch (Exception ex)
