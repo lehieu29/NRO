@@ -2685,6 +2685,23 @@ public class Service
 				HsnrLog.Log("LOGIN", "finishLoadMap cmd=-39 uuid=" + uuid);
 			}
 			session.sendMessage(message);
+			if (HsnrConfig.useHsnrProtocol)
+			{
+				// HSNR native pcap MSG18: ngay sau -39[uid] gui them -63[0xff] = ack
+				// post-loadmap. Client thieu -63 -> server kick ~60ms sau -39.
+				Message ack = null;
+				try
+				{
+					ack = new Message((sbyte)(-63));
+					ack.writer().writeByte((sbyte)(-1));
+					session.sendMessage(ack);
+					HsnrLog.Log("LOGIN", "finishLoadMap ack cmd=-63 [ff]");
+				}
+				finally
+				{
+					if (ack != null) ack.cleanup();
+				}
+			}
 		}
 		catch (Exception ex)
 		{
