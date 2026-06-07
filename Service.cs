@@ -3306,6 +3306,13 @@ public class Service
 
 	public void getImgByName(string nameImg)
 	{
+		if (HsnrConfig.useHsnrProtocol)
+		{
+			// HSNR native KHONG BAO GIO gui cmd=66 (getImgByName UTF). Ground truth
+			// C2S pcap (decode 536/536): moi anh load qua cmd=-67 (requestIcon int id).
+			// Server HSNR nhan cmd=66 la -> kick (~31ms sau loat set_eff/hat). Chan han.
+			return;
+		}
 		Message message = null;
 		try
 		{
