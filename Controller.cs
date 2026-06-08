@@ -3551,6 +3551,10 @@ public class Controller : IMessageHandler
 				break;
 			case -24:
 				Res.outz("***************MAP_INFO**************");
+				// HSNR: moi MAP_INFO moi -> reset guard finishLoadMap (cho phep gui lai
+				// 1 lan moi cho map sap toi). switchToMe() dec goi 2 lan/map nen guard
+				// nay chong gui lap 4 cmd lien tiep -39/-63/-39/-63 (server kick).
+				HsnrConfig.finishLoadMapSent = false;
 				GameScr.isPickNgocRong = false;
 				Char.isLoadingMap = true;
 				Cout.println("GET MAP INFO");

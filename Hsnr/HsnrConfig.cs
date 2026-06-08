@@ -119,11 +119,17 @@ public static class HsnrConfig
 	public static bool clientTypeSent = false;
 	public static bool deviceUuidSent = false;
 
-	// Gọi trong doConnect để bắt đầu phiên mới.
+	// Guard finishLoadMap: GameScr.switchToMe() bi goi 2 lan/map (1 tu loadCurrMap,
+	// 1 tu Char.changeMap?) -> client gui -39+-63 LIEN TIEP 4 lenh, server thay
+	// bat thuong -> kick. Chi cho gui 1 lan moi map, reset khi case -24 MAP_INFO.
+	public static bool finishLoadMapSent = false;
+
+	// Goi trong doConnect de bat dau phien moi.
 	public static void ResetLoginGuards()
 	{
 		clientTypeSent = false;
 		deviceUuidSent = false;
+		finishLoadMapSent = false;
 	}
 
 	// Bật log chẩn đoán framing.

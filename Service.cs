@@ -2665,6 +2665,11 @@ public class Service
 
 	public void finishLoadMap()
 	{
+		if (HsnrConfig.useHsnrProtocol && HsnrConfig.finishLoadMapSent)
+		{
+			HsnrLog.Log("LOGIN", "finishLoadMap SKIP (already sent for this map)");
+			return;
+		}
 		Message message = null;
 		try
 		{
@@ -2701,6 +2706,7 @@ public class Service
 				{
 					if (ack != null) ack.cleanup();
 				}
+				HsnrConfig.finishLoadMapSent = true;
 			}
 		}
 		catch (Exception ex)
