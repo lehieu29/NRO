@@ -1089,6 +1089,7 @@ public class Service
 			{
 				message.writer().writeShort(Char.myCharz().cy);
 			}
+			HsnrLog.Log("MOVE", "cmd=-7 cx=" + Char.myCharz().cx + " cy=" + Char.myCharz().cy + " dy!=0:" + (num2 != 0));
 			session.sendMessage(message);
 			GameScr.tickMove++;
 			message.cleanup();
@@ -1709,6 +1710,15 @@ public class Service
 				for (int k = 0; k < vMob.size(); k++)
 				{
 					Mob mob2 = (Mob)vMob.elementAt(k);
+					HsnrLog.Log("ATK", "cmd=54 mob[" + k + "] mobId=" + mob2.mobId + " isMobMe=" + mob2.isMobMe + " templateId=" + mob2.templateId);
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						// HSNR native cmd=54 handler (case '6'): readInt(targetId)+readByte(dir).
+						// mobId la GLOBAL int (32-bit) tu loadInfoMap. Client goc ghi writeByte
+						// (mobId fit byte o NRO goc) -> server doc int sai -> danh +0. Ghi writeInt.
+						message.writer().writeInt(mob2.mobId);
+						continue;
+					}
 					if (!mob2.isMobMe)
 					{
 						message.writer().writeByte(mob2.mobId);
@@ -1717,6 +1727,7 @@ public class Service
 					message.writer().writeByte((sbyte)(-1));
 					message.writer().writeInt(mob2.mobId);
 				}
+				HsnrLog.Log("ATK", "cmd=54 vMobSize=" + vMob.size() + " cdir=" + Char.myCharz().cdir + " type=" + type);
 			}
 			else if (vChar.size() > 0)
 			{
@@ -2405,6 +2416,10 @@ public class Service
 	public void requestIcon(int id)
 	{
 		GameCanvas.connect();
+		if (HsnrConfig.useHsnrProtocol)
+		{
+			HsnrLog.Log("IMG", "requestIcon SEND cmd=-67 id=" + id);
+		}
 		Message message = null;
 		try
 		{

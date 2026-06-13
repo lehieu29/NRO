@@ -2680,6 +2680,10 @@ public class Controller : IMessageHandler
 				{
 					array17 = NinjaUtil.readByteArray(msg);
 					Res.outz(">SIZE CHECK= " + array17.Length);
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						HsnrLog.Log("IMG", "RECV -67 id=" + num154 + " size=" + (array17 == null ? -1 : array17.Length) + " imgNewLen=" + (SmallImage.imgNew == null ? -1 : SmallImage.imgNew.Length));
+					}
 					if (num154 == 3896)
 					{
 					}
@@ -2687,7 +2691,7 @@ public class Controller : IMessageHandler
 				}
 				catch (Exception _ex)
 				{
-					HsnrLog.Log("CATCH", "Controller.cs:2641 caught: " + _ex.GetType().Name + " " + _ex.Message);
+					HsnrLog.Log("IMG", "RECV -67 id=" + num154 + " FAIL createImage: " + _ex.GetType().Name + " " + _ex.Message);
 					array17 = null;
 					SmallImage.imgNew[num154].img = Image.createRGBImage(new int[1], 1, 1, bl: true);
 				}
@@ -5322,12 +5326,16 @@ public class Controller : IMessageHandler
 			Mob.newMob.removeAllElements();
 			for (sbyte b = 0; b < num; b++)
 			{
-				// HSNR: 3 bool dau (isDisable/isDontMove/isFire) goi vao 1 int bitfield, sau do 2 bool (isIce/isWind).
-				int mobFlags = msg.reader().readInt();
-				bool isDisable = (mobFlags & 1) != 0;
-				bool isDontMove = (mobFlags & 2) != 0;
-				bool isFire = (mobFlags & 4) != 0;
-				Mob mob = new Mob(b, isDisable, isDontMove, isFire, msg.reader().readBoolean(), msg.reader().readBoolean(), msg.reader().readShort(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readShort(), msg.reader().readShort(), msg.reader().readByte(), msg.reader().readByte());
+				// HSNR native loadInfoMap (bp.bcs @0x18033A700, verify decompile): doc
+				// readInt = mobId GLOBAL (32-bit, vd 0xC4652DD), KHONG phai bitfield/index.
+				// Sau do 2 bool = isDisable/isDontMove; isFire/isIce/isWind = false (native
+				// KHONG doc). Bug cu: gan mobId=b (index 0,1,2) + tach int thanh 3 bool ->
+				// danh gui writeByte(index) -> server khong tim thay mob -> damage +0.
+				// So byte doc khong doi (int+2bool) nen stream van sync.
+				int mobIdGlobal = msg.reader().readInt();
+				bool isDisable = msg.reader().readBoolean();
+				bool isDontMove = msg.reader().readBoolean();
+				Mob mob = new Mob(mobIdGlobal, isDisable, isDontMove, false, false, false, msg.reader().readShort(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readByte(), msg.reader().readLong(), msg.reader().readShort(), msg.reader().readShort(), msg.reader().readByte(), msg.reader().readByte());
 				mob.xSd = mob.x;
 				mob.ySd = mob.y;
 				mob.isBoss = msg.reader().readBoolean();
@@ -6288,6 +6296,11 @@ public class Controller : IMessageHandler
 					Char.myCharz().idAuraEff = msg.reader().readShort();
 					Char.myCharz().idEff_Set_Item = msg.reader().readSByte();
 					Char.myCharz().idHat = msg.reader().readShort();
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						Char me = Char.myCharz();
+						HsnrLog.Log("CHARPART", "gender=" + me.cgender + " head=" + me.head + " body=" + me.body + " leg=" + me.leg + " bag=" + me.bag + " nBody=" + (me.arrItemBody == null ? -1 : me.arrItemBody.Length) + " idHat=" + me.idHat + " idAura=" + me.idAuraEff + " avail=" + msg.reader().available());
+					}
 					break;
 				}
 				catch (Exception _ex)
