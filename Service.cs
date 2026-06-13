@@ -1757,7 +1757,17 @@ public class Service
 		try
 		{
 			message = new Message((sbyte)(-20));
-			message.writer().writeShort(itemMapId);
+			if (HsnrConfig.useHsnrProtocol)
+			{
+				// HSNR native cmd=-20 (pickItem): writeInt(itemMapId) = 4 byte (pcap MSG105
+				// "00 00 00 00"), KHONG phai writeShort (2 byte). Server doc int sai length
+				// -> khong nhat duoc item. itemMapId la global int id (giong mob).
+				message.writer().writeInt(itemMapId);
+			}
+			else
+			{
+				message.writer().writeShort(itemMapId);
+			}
 			session.sendMessage(message);
 		}
 		catch (Exception ex)
