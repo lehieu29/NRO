@@ -114,6 +114,10 @@ public class SmallImage
 			}
 			else
 			{
+				if (HsnrConfig.useHsnrProtocol)
+				{
+					HsnrLog.Log("IMG", "createImage MISS id=" + id + " -> queue (zoom1), queueSize=" + (vt_images_watingDowload.size() + 1) + " scr=" + (GameCanvas.currentScreen == GameScr.gI()) + " isReqMap=" + GameCanvas.isRequestMapID);
+				}
 				vt_images_watingDowload.addElement(imgNew[id]);
 			}
 			return;
@@ -158,6 +162,10 @@ public class SmallImage
 			}
 			else
 			{
+				if (HsnrConfig.useHsnrProtocol)
+				{
+					HsnrLog.Log("IMG", "createImage MISS id=" + id + " -> queue (zoom" + mGraphics.zoomLevel + "), queueSize=" + (vt_images_watingDowload.size() + 1) + " scr=" + (GameCanvas.currentScreen == GameScr.gI()) + " isReqMap=" + GameCanvas.isRequestMapID);
+				}
 				vt_images_watingDowload.addElement(imgNew[id]);
 			}
 		}

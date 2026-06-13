@@ -528,6 +528,10 @@ public class GameCanvas : IActionListener
 
 	public void update()
 	{
+		if (HsnrConfig.useHsnrProtocol && currentScreen == GameScr.gI() && gameTick % 60 == 0)
+		{
+			HsnrLog.Log("IMG", "tick update GameScr: isReqMap=" + isRequestMapID + " queue=" + SmallImage.vt_images_watingDowload.size() + " waitChgMap=" + (waitingTimeChangeMap < mSystem.currentTimeMillis()));
+		}
 		if (currentScreen == _SelectCharScr)
 		{
 			if (gameTick % 2 == 0 && SmallImage.vt_images_watingDowload.size() > 0)
@@ -553,6 +557,10 @@ public class GameCanvas : IActionListener
 			if (SmallImage.vt_images_watingDowload.size() > 0)
 			{
 				Small small2 = (Small)SmallImage.vt_images_watingDowload.elementAt(0);
+				if (HsnrConfig.useHsnrProtocol)
+				{
+					HsnrLog.Log("IMG", "queue FLUSH id=" + small2.id + " remain=" + (SmallImage.vt_images_watingDowload.size() - 1));
+				}
 				Service.gI().requestIcon(small2.id);
 				SmallImage.vt_images_watingDowload.removeElementAt(0);
 			}
