@@ -3948,7 +3948,10 @@ public class Controller : IMessageHandler
 			{
 				GameCanvas.debug("SA78", 2);
 				sbyte b72 = msg.reader().readByte();
-				int num175 = msg.reader().readInt();
+				// HSNR native cmd=-3: sau byte la readLong (8B), KHONG phai readInt (4B).
+				// Pcap: payload 9B = 01 + <long>. Bug cu doc int -> doc 4 byte cao cua long
+				// = 0 -> "+0 tiem nang/suc manh" moi don danh. Doc long cho dung gia tri.
+				long num175 = (HsnrConfig.useHsnrProtocol ? msg.reader().readLong() : msg.reader().readInt());
 				if (b72 == 0)
 				{
 					Char.myCharz().cPower += num175;
@@ -4207,12 +4210,24 @@ public class Controller : IMessageHandler
 				Mob mob9 = null;
 				try
 				{
-					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						// HSNR: mob dinh danh bang GLOBAL int id (readInt), KHONG phai byte index.
+						// Payload that 22B = readInt(id)+readLong(hp)+readLong(dmg)+bool+byte.
+						// Bug cu doc readUnsignedByte -> doc nham byte cao cua int -> elementAt
+						// out-of-range -> mob9=null -> khong hien damage ("danh +0").
+						mob9 = GameScr.findMobInMap(msg.reader().readInt());
+					}
+					else
+					{
+						mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					}
 				}
 				catch (Exception _ex)
 				{
 					HsnrLog.Log("CATCH", "Controller.cs:4137 caught: " + _ex.GetType().Name + " " + _ex.Message);
 				}
+				HsnrLog.Log("DMG", "cmd=-9 mob9=" + (mob9 != null ? mob9.mobId.ToString() : "null"));
 				GameCanvas.debug("SA83v1", 2);
 				if (mob9 != null)
 				{
@@ -4362,8 +4377,15 @@ public class Controller : IMessageHandler
 				Mob mob9 = null;
 				try
 				{
-					int index4 = msg.reader().readUnsignedByte();
-					mob9 = (Mob)GameScr.vMob.elementAt(index4);
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						mob9 = GameScr.findMobInMap(msg.reader().readInt());
+					}
+					else
+					{
+						int index4 = msg.reader().readUnsignedByte();
+						mob9 = (Mob)GameScr.vMob.elementAt(index4);
+					}
 				}
 				catch (Exception ex27)
 				{
