@@ -6403,6 +6403,10 @@ public class Char : IMapObject
 			}
 			catch (Exception ex)
 			{
+				if (HsnrConfig.useHsnrProtocol && GameCanvas.gameTick % 120 == 0)
+				{
+					HsnrLog.Log("PAINTBODY", "EXCEPTION head=" + head + " leg=" + leg + " body=" + body + " cf=" + cf + " partsLen=" + (GameScr.parts != null ? GameScr.parts.Length : -1) + " : " + ex.GetType().Name + " " + ex.Message);
+				}
 				Debug.LogError(">>>>>>err: " + ex.ToString());
 			}
 		}

@@ -1485,6 +1485,7 @@ public class GameScr : mScreen, IChatable
 		{
 			dataInputStream = new DataInputStream(Rms.loadRMS("NR_part"));
 			int num = dataInputStream.readShort();
+			HsnrLog.Log("PART", "readPart count=" + num);
 			parts = new Part[num];
 			for (int i = 0; i < num; i++)
 			{
@@ -1501,6 +1502,7 @@ public class GameScr : mScreen, IChatable
 		}
 		catch (Exception ex)
 		{
+			HsnrLog.Log("PART", "readPart FAIL: " + ex.GetType().Name + " " + ex.Message);
 			Cout.LogError("LOI TAI readPart " + ex.ToString());
 		}
 		finally
