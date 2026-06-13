@@ -4281,7 +4281,15 @@ public class Controller : IMessageHandler
 				Mob mob9 = null;
 				try
 				{
-					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					// HSNR cmd=45 (miss): mob = global int id (readInt), khong phai byte index.
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						mob9 = GameScr.findMobInMap(msg.reader().readInt());
+					}
+					else
+					{
+						mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					}
 				}
 				catch (Exception ex29)
 				{
@@ -4303,7 +4311,17 @@ public class Controller : IMessageHandler
 				Mob mob9 = null;
 				try
 				{
-					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						// HSNR mob die (cmd=-12): readInt(globalId)+readLong(dmg)+bool+byte(itemCount)+items.
+						// Pcap: C4 65 2D E0 | 00..0A | 00 | 00 = 14B. Bug cu doc byte index -> mob9=null
+						// -> break som -> mob khong chet + khong spawn item (khong nhat duoc).
+						mob9 = GameScr.findMobInMap(msg.reader().readInt());
+					}
+					else
+					{
+						mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					}
 				}
 				catch (Exception _ex)
 				{
@@ -4351,7 +4369,14 @@ public class Controller : IMessageHandler
 				Mob mob9 = null;
 				try
 				{
-					mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						mob9 = GameScr.findMobInMap(msg.reader().readInt());
+					}
+					else
+					{
+						mob9 = (Mob)GameScr.vMob.elementAt(msg.reader().readUnsignedByte());
+					}
 				}
 				catch (Exception _ex)
 				{
