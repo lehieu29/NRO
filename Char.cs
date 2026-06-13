@@ -6397,6 +6397,7 @@ public class Char : IMapObject
 				{
 					SmallImage.drawSmallImage(g, ph.pi[CharInfo[cf][0][0]].id, cx + (CharInfo[cf][0][1] + ph.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + ph.pi[CharInfo[cf][0][0]].dy, num, anchor);
 				}
+				if (HsnrConfig.useHsnrProtocol && GameCanvas.gameTick % 120 == 0 && me) HsnrLog.Log("PARTID", "headPartId="+ph.pi[CharInfo[cf][0][0]].id+" legPartId="+pl.pi[CharInfo[cf][1][0]].id+" bodyPartId="+pb.pi[CharInfo[cf][2][0]].id+" head="+head+" leg="+leg+" body="+body+" cf="+cf);
 				SmallImage.drawSmallImage(g, pl.pi[CharInfo[cf][1][0]].id, cx + (CharInfo[cf][1][1] + pl.pi[CharInfo[cf][1][0]].dx) * num2, cy - CharInfo[cf][1][2] + pl.pi[CharInfo[cf][1][0]].dy, num, anchor);
 				SmallImage.drawSmallImage(g, pb.pi[CharInfo[cf][2][0]].id, cx + (CharInfo[cf][2][1] + pb.pi[CharInfo[cf][2][0]].dx) * num2, cy - CharInfo[cf][2][2] + pb.pi[CharInfo[cf][2][0]].dy, num, anchor);
 				paintRedEye(g, cx + (CharInfo[cf][0][1] + ph.pi[CharInfo[cf][0][0]].dx) * num2, cy - CharInfo[cf][0][2] + ph.pi[CharInfo[cf][0][0]].dy, num, anchor);
