@@ -1145,7 +1145,18 @@ public class Service
 		try
 		{
 			message = new Message((sbyte)11);
-			message.writer().writeShort(modTemplateId);
+			// HSNR: server doc template id = 1 BYTE (response cmd=11 cung readByte).
+			// Client goc writeShort (2 byte) -> server doc byte cao = 0x00 -> LUON tra
+			// template 0 -> chi mob template 0 co data -> cac mob khac isPaint()=false
+			// (data null) -> khong ve. Phai writeByte cho khop.
+			if (HsnrConfig.useHsnrProtocol)
+			{
+				message.writer().writeByte(modTemplateId);
+			}
+			else
+			{
+				message.writer().writeShort(modTemplateId);
+			}
 			session.sendMessage(message);
 		}
 		catch (Exception ex)
