@@ -27,6 +27,10 @@ public class NinjaUtil
 			{
 				sbyte[] data = new sbyte[num];
 				msg.reader().read(ref data);
+				if (HsnrConfig.useHsnrProtocol)
+				{
+					fingerprint("readByteArray", data);
+				}
 				return data;
 			}
 		}
@@ -34,6 +38,48 @@ public class NinjaUtil
 		{
 		}
 		return null;
+	}
+
+	// HSNR diagnostic: classify every received byte-array payload so byte-reversed
+	// image streams are detected the moment they arrive, at the common choke point
+	// that all image/data handlers funnel through (cmd 11 mob, -66 effect, -67 icon,
+	// -32 bgItem, etc.). Correlate the timestamp with the "RECV | cmd=..." lines to
+	// see which command carries a reversed payload.
+	public static void fingerprint(string tag, sbyte[] data)
+	{
+		try
+		{
+			if (data == null || data.Length < 8)
+			{
+				return;
+			}
+			int b0 = data[0] & 0xFF;
+			int b1 = data[1] & 0xFF;
+			int b2 = data[2] & 0xFF;
+			int b3 = data[3] & 0xFF;
+			int n = data.Length;
+			int e3 = data[n - 4] & 0xFF;
+			int e2 = data[n - 3] & 0xFF;
+			int e1 = data[n - 2] & 0xFF;
+			int e0 = data[n - 1] & 0xFF;
+			string kind = "OTHER";
+			if (b0 == 0x89 && b1 == 0x50 && b2 == 0x4E && b3 == 0x47)
+			{
+				kind = "PNG_FWD";
+			}
+			else if (b0 == 0x82 && b1 == 0x60 && b2 == 0x42 && b3 == 0xAE)
+			{
+				kind = "PNG_REV";
+			}
+			else if (e0 == 0x89 && e1 == 0x50 && e2 == 0x4E && e3 == 0x47)
+			{
+				kind = "PNG_REV";
+			}
+			HsnrLog.Log("BYTES", tag + " len=" + data.Length + " kind=" + kind + " head=" + b0.ToString("X2") + b1.ToString("X2") + b2.ToString("X2") + b3.ToString("X2") + " tail=" + e3.ToString("X2") + e2.ToString("X2") + e1.ToString("X2") + e0.ToString("X2"));
+		}
+		catch (Exception)
+		{
+		}
 	}
 
 	public static sbyte[] readByteArray(myReader dos)

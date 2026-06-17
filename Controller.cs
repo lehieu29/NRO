@@ -2654,8 +2654,13 @@ public class Controller : IMessageHandler
 					}
 				}
 				sbyte[] array2 = NinjaUtil.readByteArray(msg);
-				Image img = Image.createImage(array2, 0, array2.Length);
+				Image img = (HsnrConfig.useHsnrProtocol ? Image.createImageAuto(array2) : Image.createImage(array2, 0, array2.Length));
 				Mob.arrMobTemplate[num14].data.img = img;
+				if (HsnrConfig.useHsnrProtocol)
+				{
+					EffectData _ed = Mob.arrMobTemplate[num14].data;
+					HsnrLog.Log("MOBTPL", "id=" + num14 + " b10=" + b10 + " imgW=" + ((img == null) ? -1 : mGraphics.getImageWidth(img)) + " imgH=" + ((img == null) ? -1 : mGraphics.getImageHeight(img)) + " imgInfo=" + ((_ed.imgInfo == null) ? -1 : _ed.imgInfo.Length) + " frame=" + ((_ed.frame == null) ? -1 : _ed.frame.Length) + " w=" + _ed.width + " h=" + _ed.height);
+				}
 				int num15 = msg.reader().readByte();
 				Mob.arrMobTemplate[num14].data.typeData = num15;
 				if (num15 == 1 || num15 == 2)
@@ -2687,7 +2692,25 @@ public class Controller : IMessageHandler
 					if (num154 == 3896)
 					{
 					}
-					SmallImage.imgNew[num154].img = createImage(array17);
+					sbyte[] _png = array17;
+					if (HsnrConfig.useHsnrProtocol && array17 != null)
+					{
+						// HSNR: the cmd=-67 image payload is a FULLY BYTE-REVERSED PNG
+						// (file starts with the reversed IEND chunk, ends with the reversed
+						// PNG signature). Unity's Texture2D.LoadImage cannot read it and
+						// silently yields a 4x4 texture. Reverse the bytes back to a valid PNG.
+						_png = new sbyte[array17.Length];
+						for (int _r = 0; _r < array17.Length; _r++)
+						{
+							_png[_r] = array17[array17.Length - 1 - _r];
+						}
+					}
+					Image _decImg = createImage(_png);
+					SmallImage.imgNew[num154].img = _decImg;
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						HsnrLog.Log("IMGDEC", "id=" + num154 + " len=" + ((array17 == null) ? -1 : array17.Length) + " decW=" + ((_decImg == null) ? -1 : mGraphics.getImageWidth(_decImg)) + " decH=" + ((_decImg == null) ? -1 : mGraphics.getImageHeight(_decImg)));
+					}
 				}
 				catch (Exception _ex)
 				{
@@ -4161,12 +4184,35 @@ public class Controller : IMessageHandler
 			case -13:
 			{
 				GameCanvas.debug("SA82", 2);
-				int num184 = msg.reader().readUnsignedByte();
-				if (num184 > GameScr.vMob.size() - 1 || num184 < 0)
+				// HSNR cmd=-13 (mob hoi sinh / respawn): readInt(globalId) + byte sys + byte levelBoss
+				// + long hp  (pcap 14B: C4 65 2D 40 | 00 | 00 | 00..00 C8). Client goc doc
+				// readUnsignedByte lam INDEX -> 0xC4=196 > vMob.size()-1 -> return som -> mob KHONG
+				// hoi sinh (khong ve lai). Phai tra cuu theo global id nhu cac handler mob khac.
+				Mob mob9 = null;
+				if (HsnrConfig.useHsnrProtocol)
 				{
-					return;
+					try
+					{
+						mob9 = GameScr.findMobInMap(msg.reader().readInt());
+					}
+					catch (Exception _ex)
+					{
+						HsnrLog.Log("CATCH", "Controller.cs:-13 caught: " + _ex.GetType().Name + " " + _ex.Message);
+					}
+					if (mob9 == null)
+					{
+						break;
+					}
 				}
-				Mob mob9 = (Mob)GameScr.vMob.elementAt(num184);
+				else
+				{
+					int num184 = msg.reader().readUnsignedByte();
+					if (num184 > GameScr.vMob.size() - 1 || num184 < 0)
+					{
+						return;
+					}
+					mob9 = (Mob)GameScr.vMob.elementAt(num184);
+				}
 				mob9.sys = msg.reader().readByte();
 				mob9.levelBoss = msg.reader().readByte();
 				if (mob9.levelBoss != 0)
@@ -7000,6 +7046,10 @@ public class Controller : IMessageHandler
 				short req = d.readShort();
 				short extra = d.readShort();
 				bool flag = d.readBoolean();
+				if (k < 12)
+				{
+					HsnrLog.Log("ITEMFIELD", "k=" + k + " id=" + id + " type=" + type + " part=" + part + " icon=" + (icon & 0xFF) + " dura=" + dura + " req=" + req + " extra=" + extra + " flag=" + flag + " name=" + name);
+				}
 				// ItemTemplate ctor: (id, type, gender, name, desc, level, strRequire, iconID, part, isUpToUp)
 				// HSNR map: id, type, part(=gender slot? actually 'part'), name, desc, icon, dura, req, extra, flag
 				// Client field 'gender' is unused in HSNR — pass `part` as gender; iconID/part shifted.

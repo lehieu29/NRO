@@ -83,6 +83,35 @@ public class Image
 		return createImage(array);
 	}
 
+	// HSNR: some server image payloads (e.g. cmd=-67 icons) are fully BYTE-REVERSED
+	// PNGs. Unity's Texture2D.LoadImage cannot read them and silently yields a 4x4
+	// texture. This decoder tries the bytes as-is first; if the result is junk
+	// (null / <=4x4), it retries with the byte order reversed. Works for both normal
+	// (forward) PNG payloads and byte-reversed ones, so callers don't need to know.
+	public static Image createImageAuto(sbyte[] imageData)
+	{
+		if (imageData == null || imageData.Length == 0)
+		{
+			return null;
+		}
+		Image image = createImage(imageData, 0, imageData.Length);
+		if (image != null && mGraphics.getImageWidth(image) > 4 && mGraphics.getImageHeight(image) > 4)
+		{
+			return image;
+		}
+		sbyte[] rev = new sbyte[imageData.Length];
+		for (int i = 0; i < imageData.Length; i++)
+		{
+			rev[i] = imageData[imageData.Length - 1 - i];
+		}
+		Image image2 = createImage(rev, 0, rev.Length);
+		if (image2 != null && mGraphics.getImageWidth(image2) > 4 && mGraphics.getImageHeight(image2) > 4)
+		{
+			return image2;
+		}
+		return (image != null) ? image : image2;
+	}
+
 	public static byte convertSbyteToByte(sbyte var)
 	{
 		if (var > 0)

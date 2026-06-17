@@ -99,6 +99,48 @@ public class SmallImage
 	public static void createImage(int id)
 	{
 		Res.outz("is request =" + id + " zoom=" + mGraphics.zoomLevel);
+		if (HsnrConfig.useHsnrProtocol)
+		{
+			// HSNR: bundled DragonBoy250 /SmallImage assets do not match the server's
+			// part ids and decode to junk 1x1/4x4 textures. Match the native client:
+			// only use a local/cached image if it is real (>4x4); otherwise request it
+			// from the server via cmd=-67 (like native createImage on a cache miss).
+			Image local = null;
+			try
+			{
+				local = GameCanvas.loadImage("/SmallImage/Small" + id + ".png");
+			}
+			catch (Exception)
+			{
+			}
+			if (local != null && mGraphics.getImageWidth(local) > 4 && mGraphics.getImageHeight(local) > 4)
+			{
+				imgNew[id] = new Small(local, id);
+				HsnrLog.Log("IMG", "createImage LOCAL id=" + id + " " + mGraphics.getImageWidth(local) + "x" + mGraphics.getImageHeight(local));
+				return;
+			}
+			sbyte[] cached = Rms.loadRMS(mGraphics.zoomLevel + "Small" + id);
+			if (cached != null)
+			{
+				// HSNR cache stores the server-format (byte-reversed) PNG; reverse to decode.
+				sbyte[] cpng = new sbyte[cached.Length];
+				for (int r = 0; r < cached.Length; r++)
+				{
+					cpng[r] = cached[cached.Length - 1 - r];
+				}
+				Image im = Image.createImage(cpng, 0, cpng.Length);
+				if (im != null && mGraphics.getImageWidth(im) > 4 && mGraphics.getImageHeight(im) > 4)
+				{
+					imgNew[id] = new Small(im, id);
+					HsnrLog.Log("IMG", "createImage RMS id=" + id + " " + mGraphics.getImageWidth(im) + "x" + mGraphics.getImageHeight(im));
+					return;
+				}
+			}
+			imgNew[id] = new Small(imgEmpty, id);
+			HsnrLog.Log("IMG", "createImage REQ -67 id=" + id + " localW=" + ((local == null) ? -1 : mGraphics.getImageWidth(local)) + " cachedLen=" + ((cached == null) ? -1 : cached.Length));
+			Service.gI().requestIcon(id);
+			return;
+		}
 		if (mGraphics.zoomLevel == 1)
 		{
 			Image image = GameCanvas.loadImage("/SmallImage/Small" + id + ".png");

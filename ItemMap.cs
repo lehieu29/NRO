@@ -181,6 +181,10 @@ public class ItemMap : IMapObject
 			{
 				g.drawImage(imageFlare, x, y + status + 13, mGraphics.BOTTOM | mGraphics.HCENTER);
 			}
+			if (HsnrConfig.useHsnrProtocol && GameCanvas.gameTick % 120 == 0)
+			{
+				HsnrLog.Log("ITEMDRAW", "itemTemplateId=" + ((template == null) ? -1 : template.id) + " iconID=" + ((template == null) ? -1 : template.iconID));
+			}
 			if (status <= 0)
 			{
 				SmallImage.drawSmallImage(g, template.iconID, x, y + status + 3, 0, mGraphics.BOTTOM | mGraphics.HCENTER);
