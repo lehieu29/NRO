@@ -2718,7 +2718,7 @@ public class Controller : IMessageHandler
 					array17 = null;
 					SmallImage.imgNew[num154].img = Image.createRGBImage(new int[1], 1, 1, bl: true);
 				}
-				if (array17 != null && mGraphics.zoomLevel > 1)
+				if (array17 != null && (HsnrConfig.useHsnrProtocol || mGraphics.zoomLevel > 1))
 				{
 					Rms.saveRMS(mGraphics.zoomLevel + "Small" + num154, array17);
 				}
@@ -4049,11 +4049,34 @@ public class Controller : IMessageHandler
 					sbyte b74 = msg.reader().readByte();
 					if (obj16.cy <= 10 && b74 != 0 && b74 != 2)
 					{
-						Res.outz("nhân vật bay trên trời xuống x= " + obj16.cx + " y= " + obj16.cy);
-						Teleport teleport2 = new Teleport(obj16.cx, obj16.cy, obj16.head, obj16.cdir, 1, isMe: false, (b74 != 1) ? b74 : obj16.cgender);
-						teleport2.id = obj16.charID;
-						obj16.isTeleport = true;
-						Teleport.addTeleport(teleport2);
+						if (HsnrConfig.useHsnrProtocol)
+						{
+							// HSNR: char vao map roi tu tren troi xuong DAT (native bck: do tile tu cy
+							// xuong moi 12px, snap luoi 24px, cy = dat - 30, statusMe = 4). Client goc
+							// tao Teleport effect + de cy tren cao -> char bi "bay cao" mai. Port logic
+							// dap dat cua native.
+							int gy = obj16.cy;
+							for (int fk = 0; fk < 100; fk++)
+							{
+								gy += 12;
+								if (TileMap.tileTypeAt(obj16.cx, gy, 2))
+								{
+									gy = gy / 24 * 24;
+									break;
+								}
+							}
+							obj16.cy = gy - 30;
+							obj16.ySd = obj16.cy;
+							obj16.statusMe = 4;
+						}
+						else
+						{
+							Res.outz("nhân vật bay trên trời xuống x= " + obj16.cx + " y= " + obj16.cy);
+							Teleport teleport2 = new Teleport(obj16.cx, obj16.cy, obj16.head, obj16.cdir, 1, isMe: false, (b74 != 1) ? b74 : obj16.cgender);
+							teleport2.id = obj16.charID;
+							obj16.isTeleport = true;
+							Teleport.addTeleport(teleport2);
+						}
 					}
 					if (b74 == 2)
 					{
@@ -4116,17 +4139,20 @@ public class Controller : IMessageHandler
 				Res.outz("addplayer:   " + b75);
 				obj16.cFlag = b75;
 				obj16.isNhapThe = msg.reader().readByte() == 1;
-				try
+				if (!HsnrConfig.useHsnrProtocol)
 				{
-					obj16.idAuraEff = msg.reader().readShort();
-					obj16.idEff_Set_Item = msg.reader().readSByte();
-					obj16.idHat = msg.reader().readShort();
-					Effect.GetCharEff(obj16);
-				}
-				catch (Exception ex38)
-				{
-					HsnrLog.Log("CATCH", "Controller.cs:4028 caught: " + ex38.GetType().Name + " " + ex38.Message);
-					Res.outz("cmd: -5 err: " + ex38.StackTrace);
+					try
+					{
+						obj16.idAuraEff = msg.reader().readShort();
+						obj16.idEff_Set_Item = msg.reader().readSByte();
+						obj16.idHat = msg.reader().readShort();
+						Effect.GetCharEff(obj16);
+					}
+					catch (Exception ex38)
+					{
+						HsnrLog.Log("CATCH", "Controller.cs:4028 caught: " + ex38.GetType().Name + " " + ex38.Message);
+						Res.outz("cmd: -5 err: " + ex38.StackTrace);
+					}
 				}
 				GameScr.gI().getFlagImage(obj16.charID, obj16.cFlag);
 				break;
@@ -4152,7 +4178,18 @@ public class Controller : IMessageHandler
 						continue;
 					}
 					GameCanvas.debug("SA8x2y" + num176, 2);
-					obj15.moveTo(msg.reader().readShort(), msg.reader().readShort(), 0);
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						// HSNR cmd=-7 gui (y, x) chu KHONG phai (x, y) nhu client goc. Doc xuoi (x,y)
+						// -> char di chuyen theo truc dung (cy doi nhieu) -> "bay cao". Doc y truoc, x sau.
+						int _my = msg.reader().readShort();
+						int _mx = msg.reader().readShort();
+						obj15.moveTo(_mx, _my, 0);
+					}
+					else
+					{
+						obj15.moveTo(msg.reader().readShort(), msg.reader().readShort(), 0);
+					}
 					obj15.lastUpdateTime = mSystem.currentTimeMillis();
 					break;
 				}
@@ -4391,15 +4428,43 @@ public class Controller : IMessageHandler
 						GameScr.startFlyText("-" + num185, mob9.x, mob9.y - mob9.h, 0, -2, mFont.ORANGE);
 					}
 					sbyte b77 = msg.reader().readByte();
+					if (HsnrConfig.useHsnrProtocol)
+					{
+						HsnrLog.Log("MOBDROP", "mobId=" + mob9.mobId + " itemCount=" + b77 + " availBefore=" + msg.reader().available());
+					}
 					for (int num186 = 0; num186 < b77; num186++)
 					{
-						ItemMap itemMap6 = new ItemMap(msg.reader().readShort(), msg.reader().readShort(), mob9.x, mob9.y, msg.reader().readShort(), msg.reader().readShort());
-						int num187 = (itemMap6.playerId = msg.reader().readInt());
-						Res.outz("playerid= " + num187 + " my id= " + Char.myCharz().charID);
-						GameScr.vItemMap.addElement(itemMap6);
-						if (Res.abs(itemMap6.y - Char.myCharz().cy) < 24 && Res.abs(itemMap6.x - Char.myCharz().cx) < 24)
+						if (HsnrConfig.useHsnrProtocol)
 						{
-							Char.myCharz().charFocus = null;
+							// HSNR item drop = giong layout map-load: int(itemMapID) short(templateID)
+							// short(x) short(y) int(playerId) = 14B. Client goc doc short(itemMapID)
+							// -> lech 2 byte -> x=xEnd sai (vd 73) -> item ve NGOAI man hinh nen khong
+							// thay. Dung toa do that (x,y gan mob) + ctor map-load (status=1) thi hien.
+							int dImid = msg.reader().readInt();
+							short dTid = msg.reader().readShort();
+							int dx = msg.reader().readShort();
+							int dy = msg.reader().readShort();
+							int dPid = msg.reader().readInt();
+							ItemMap itemMap6 = new ItemMap(dPid, (short)dImid, dTid, dx, dy, (short)0);
+							itemMap6.itemMapID = dImid;
+							itemMap6.playerId = dPid;
+							HsnrLog.Log("MOBDROP", "item idx=" + num186 + " itemMapId=" + dImid + " templateId=" + dTid + " x=" + dx + " y=" + dy + " playerId=" + dPid + " tmplNull=" + (itemMap6.template == null) + " availAfter=" + msg.reader().available());
+							GameScr.vItemMap.addElement(itemMap6);
+							if (Res.abs(itemMap6.y - Char.myCharz().cy) < 24 && Res.abs(itemMap6.x - Char.myCharz().cx) < 24)
+							{
+								Char.myCharz().charFocus = null;
+							}
+						}
+						else
+						{
+							ItemMap itemMap6 = new ItemMap(msg.reader().readShort(), msg.reader().readShort(), mob9.x, mob9.y, msg.reader().readShort(), msg.reader().readShort());
+							int num187 = (itemMap6.playerId = msg.reader().readInt());
+							Res.outz("playerid= " + num187 + " my id= " + Char.myCharz().charID);
+							GameScr.vItemMap.addElement(itemMap6);
+							if (Res.abs(itemMap6.y - Char.myCharz().cy) < 24 && Res.abs(itemMap6.x - Char.myCharz().cx) < 24)
+							{
+								Char.myCharz().charFocus = null;
+							}
 						}
 					}
 				}
@@ -6757,6 +6822,7 @@ public class Controller : IMessageHandler
 
 	public bool readCharInfo(Char c, Message msg)
 	{
+		int _availStart = (HsnrConfig.useHsnrProtocol ? msg.reader().available() : 0);
 		try
 		{
 			c.clevel = msg.reader().readByte();
@@ -6783,6 +6849,51 @@ public class Controller : IMessageHandler
 			c.bag = msg.reader().readShort();
 			Res.outz(" body= " + c.body + " leg= " + c.leg + " bag=" + c.bag + "BAG ==" + c.bag + "*********************************");
 			c.isShadown = true;
+			if (HsnrConfig.useHsnrProtocol)
+			{
+				// HSNR readCharInfo (native bcy @0x180346200): sau 'bag' KHONG co weapon byte.
+				// Thu tu: 4 short phu (0xB0/0xB4/0xB8/0x7C8) + (byte count1 + count1 short) list
+				// + cx(short,0x11C) + cy(short,0x120) + (byte count2 + count2 effect[byte,int,int,short]).
+				// Client goc doc weapon byte + buffHp/buffMp sai vi tri -> count effect doc nham
+				// (vd 0x03) -> loop doc rac -> IndexOutOfRange -> char khong duoc add -> khong ve.
+				msg.reader().readShort();
+				msg.reader().readShort();
+				msg.reader().readShort();
+				msg.reader().readShort();
+				int nList = msg.reader().readByte();
+				for (int li = 0; li < nList; li++)
+				{
+					msg.reader().readShort();
+				}
+				if (c.wp == -1)
+				{
+					c.setDefaultWeapon();
+				}
+				if (c.body == -1)
+				{
+					c.setDefaultBody();
+				}
+				if (c.leg == -1)
+				{
+					c.setDefaultLeg();
+				}
+				c.cx = msg.reader().readShort();
+				c.cy = msg.reader().readShort();
+				c.xSd = c.cx;
+				c.ySd = c.cy;
+				int numEff = msg.reader().readByte();
+				for (int ei = 0; ei < numEff; ei++)
+				{
+					EffectChar ec = new EffectChar(msg.reader().readByte(), msg.reader().readInt(), msg.reader().readInt(), msg.reader().readShort());
+					c.vEff.addElement(ec);
+					if (ec.template.type == 12 || ec.template.type == 11)
+					{
+						c.isInvisiblez = true;
+					}
+				}
+				HsnrLog.Log("CHARINFO5", "id=" + c.charID + " name=" + c.cName + " body=" + c.body + " leg=" + c.leg + " cx=" + c.cx + " cy=" + c.cy + " nList=" + nList + " nEff=" + numEff + " availStart=" + _availStart + " availEnd=" + msg.reader().available());
+				return true;
+			}
 			sbyte b = msg.reader().readByte();
 			if (c.wp == -1)
 			{
