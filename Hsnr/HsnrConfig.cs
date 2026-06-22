@@ -132,11 +132,13 @@ public static class HsnrConfig
 		finishLoadMapSent = false;
 	}
 
-	// Bật log chẩn đoán framing.
-	public static bool verboseFramingDiagnostics = true;
+	// Bật log chẩn đoán framing. TẮT mặc định (hot path) — bật lại = true khi cần điều tra.
+	public static bool verboseFramingDiagnostics = false;
 
 	// Bật logger HsnrLog (ghi Debug.Log + file hsnr_log.txt). Đặt false khi phát hành.
-	public static bool enableLog = true;
+	// TẮT mặc định để tránh chậm login/đổi map (Debug.Log + ghi file mỗi gói +
+	// DumpFull hex toàn bộ -24/-28). Bật lại = true khi cần điều tra.
+	public static bool enableLog = false;
 
 	// ---- BẬT HSNR ----
 	// Ghi đè TẤT CẢ tham số sang giá trị HSNR đã verify. Gọi MỘT LẦN lúc khởi

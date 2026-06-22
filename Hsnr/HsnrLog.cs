@@ -110,16 +110,20 @@ public static class HsnrLog
 	// Chuyển sbyte[] -> chuỗi ASCII đọc được (ký tự ngoài 32..126 thành '.').
 	public static string Ascii(sbyte[] data, int len = -1)
 	{
-		if (data == null) return "(null)";
-		if (len < 0) len = data.Length;
-		if (len > data.Length) len = data.Length;
-		int cap = (len < 80) ? len : 80;
-		StringBuilder sb = new StringBuilder(cap);
-		for (int i = 0; i < cap; i++)
+		if (HsnrConfig.enableLog)
 		{
-			byte b = (byte)data[i];
-			sb.Append((b >= 32 && b < 127) ? (char)b : '.');
+			if (data == null) return "(null)";
+			if (len < 0) len = data.Length;
+			if (len > data.Length) len = data.Length;
+			int cap = (len < 80) ? len : 80;
+			StringBuilder sb = new StringBuilder(cap);
+			for (int i = 0; i < cap; i++)
+			{
+				byte b = (byte)data[i];
+				sb.Append((b >= 32 && b < 127) ? (char)b : '.');
+			}
+			return sb.ToString();
 		}
-		return sb.ToString();
+		return "Vui lòng mở lại cờ enableLog để có dữ liệu";
 	}
 }
